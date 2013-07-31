@@ -39,7 +39,7 @@ namespace WebLogViewver
 			this.components = new System.ComponentModel.Container();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
 			this.tabControl1 = new System.Windows.Forms.TabControl();
-			this.tabPage1 = new System.Windows.Forms.TabPage();
+			this.tabConfig = new System.Windows.Forms.TabPage();
 			this.label4 = new System.Windows.Forms.Label();
 			this.b_TimerButton = new System.Windows.Forms.Button();
 			this.gp_Files = new System.Windows.Forms.GroupBox();
@@ -60,22 +60,22 @@ namespace WebLogViewver
 			this.fileSystemWatcher1 = new System.IO.FileSystemWatcher();
 			this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
 			this.timer1 = new System.Windows.Forms.Timer(this.components);
-			this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-			this.fermerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.fermerEtSupprimerFichierToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.fermerEtViderFichierToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.contextMenuStripFileTabs = new System.Windows.Forms.ContextMenuStrip(this.components);
+			this.CloseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.CloseAndDeleteFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.CloseAndEmptyFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.HtmlDisplayToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
-			this.toutFermerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toutCloseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toutFermerEtSupprimerLesFichiersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.tabControl1.SuspendLayout();
-			this.tabPage1.SuspendLayout();
+			this.tabConfig.SuspendLayout();
 			this.gp_Files.SuspendLayout();
 			this.gp_Timer.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.num_Freq)).BeginInit();
 			this.gb_WatchType.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).BeginInit();
-			this.contextMenuStrip1.SuspendLayout();
+			this.contextMenuStripFileTabs.SuspendLayout();
 			this.contextMenuStrip2.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -83,7 +83,7 @@ namespace WebLogViewver
 			// 
 			this.tabControl1.AllowDrop = true;
 			this.tabControl1.Appearance = System.Windows.Forms.TabAppearance.Buttons;
-			this.tabControl1.Controls.Add(this.tabPage1);
+			this.tabControl1.Controls.Add(this.tabConfig);
 			this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tabControl1.Location = new System.Drawing.Point(0, 0);
 			this.tabControl1.Name = "tabControl1";
@@ -92,23 +92,23 @@ namespace WebLogViewver
 			this.tabControl1.TabIndex = 0;
 			this.tabControl1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.MainFormMouseUp);
 			// 
-			// tabPage1
+			// tabConfig
 			// 
-			this.tabPage1.AutoScroll = true;
-			this.tabPage1.Controls.Add(this.label4);
-			this.tabPage1.Controls.Add(this.b_TimerButton);
-			this.tabPage1.Controls.Add(this.gp_Files);
-			this.tabPage1.Controls.Add(this.gp_Timer);
-			this.tabPage1.Controls.Add(this.b_Apply);
-			this.tabPage1.Controls.Add(this.gb_WatchType);
-			this.tabPage1.Location = new System.Drawing.Point(4, 25);
-			this.tabPage1.Name = "tabPage1";
-			this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage1.Size = new System.Drawing.Size(1248, 508);
-			this.tabPage1.TabIndex = 0;
-			this.tabPage1.Text = "Config";
-			this.tabPage1.UseVisualStyleBackColor = true;
-			this.tabPage1.Click += new System.EventHandler(this.TabPage1Click);
+			this.tabConfig.AutoScroll = true;
+			this.tabConfig.Controls.Add(this.label4);
+			this.tabConfig.Controls.Add(this.b_TimerButton);
+			this.tabConfig.Controls.Add(this.gp_Files);
+			this.tabConfig.Controls.Add(this.gp_Timer);
+			this.tabConfig.Controls.Add(this.b_Apply);
+			this.tabConfig.Controls.Add(this.gb_WatchType);
+			this.tabConfig.Location = new System.Drawing.Point(4, 25);
+			this.tabConfig.Name = "tabConfig";
+			this.tabConfig.Padding = new System.Windows.Forms.Padding(3);
+			this.tabConfig.Size = new System.Drawing.Size(1248, 508);
+			this.tabConfig.TabIndex = 0;
+			this.tabConfig.Text = "Config";
+			this.tabConfig.UseVisualStyleBackColor = true;
+			this.tabConfig.Click += new System.EventHandler(this.TabConfigClick);
 			// 
 			// label4
 			// 
@@ -300,36 +300,36 @@ namespace WebLogViewver
 			// 
 			this.timer1.Tick += new System.EventHandler(this.Timer1Tick);
 			// 
-			// contextMenuStrip1
+			// contextMenuStripFileTabs
 			// 
-			this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-									this.fermerToolStripMenuItem,
-									this.fermerEtSupprimerFichierToolStripMenuItem,
-									this.fermerEtViderFichierToolStripMenuItem,
+			this.contextMenuStripFileTabs.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+									this.CloseToolStripMenuItem,
+									this.CloseAndDeleteFileToolStripMenuItem,
+									this.CloseAndEmptyFileToolStripMenuItem,
 									this.HtmlDisplayToolStripMenuItem});
-			this.contextMenuStrip1.Name = "contextMenuStrip1";
-			this.contextMenuStrip1.Size = new System.Drawing.Size(219, 114);
+			this.contextMenuStripFileTabs.Name = "contextMenuStripFileTabs";
+			this.contextMenuStripFileTabs.Size = new System.Drawing.Size(219, 114);
 			// 
-			// fermerToolStripMenuItem
+			// CloseToolStripMenuItem
 			// 
-			this.fermerToolStripMenuItem.Name = "fermerToolStripMenuItem";
-			this.fermerToolStripMenuItem.Size = new System.Drawing.Size(218, 22);
-			this.fermerToolStripMenuItem.Text = "&Fermer";
-			this.fermerToolStripMenuItem.Click += new System.EventHandler(this.FermerToolStripMenuItemClick);
+			this.CloseToolStripMenuItem.Name = "CloseToolStripMenuItem";
+			this.CloseToolStripMenuItem.Size = new System.Drawing.Size(218, 22);
+			this.CloseToolStripMenuItem.Text = "&Fermer";
+			this.CloseToolStripMenuItem.Click += new System.EventHandler(this.CloseToolStripMenuItemClick);
 			// 
-			// fermerEtSupprimerFichierToolStripMenuItem
+			// CloseAndDeleteFileToolStripMenuItem
 			// 
-			this.fermerEtSupprimerFichierToolStripMenuItem.Name = "fermerEtSupprimerFichierToolStripMenuItem";
-			this.fermerEtSupprimerFichierToolStripMenuItem.Size = new System.Drawing.Size(218, 22);
-			this.fermerEtSupprimerFichierToolStripMenuItem.Text = "Fermer et &Supprimer fichier";
-			this.fermerEtSupprimerFichierToolStripMenuItem.Click += new System.EventHandler(this.FermerEtSupprimerFichierToolStripMenuItemClick);
+			this.CloseAndDeleteFileToolStripMenuItem.Name = "CloseAndDeleteFileToolStripMenuItem";
+			this.CloseAndDeleteFileToolStripMenuItem.Size = new System.Drawing.Size(218, 22);
+			this.CloseAndDeleteFileToolStripMenuItem.Text = "Fermer et &Supprimer fichier";
+			this.CloseAndDeleteFileToolStripMenuItem.Click += new System.EventHandler(this.CloseAndDeleteFileToolStripMenuItemClick);
 			// 
-			// fermerEtViderFichierToolStripMenuItem
+			// CloseAndEmptyFileToolStripMenuItem
 			// 
-			this.fermerEtViderFichierToolStripMenuItem.Name = "fermerEtViderFichierToolStripMenuItem";
-			this.fermerEtViderFichierToolStripMenuItem.Size = new System.Drawing.Size(218, 22);
-			this.fermerEtViderFichierToolStripMenuItem.Text = "Fermer et &Vider Fichier";
-			this.fermerEtViderFichierToolStripMenuItem.Click += new System.EventHandler(this.FermerEtViderFichierToolStripMenuItemClick);
+			this.CloseAndEmptyFileToolStripMenuItem.Name = "CloseAndEmptyFileToolStripMenuItem";
+			this.CloseAndEmptyFileToolStripMenuItem.Size = new System.Drawing.Size(218, 22);
+			this.CloseAndEmptyFileToolStripMenuItem.Text = "Fermer et &Vider Fichier";
+			this.CloseAndEmptyFileToolStripMenuItem.Click += new System.EventHandler(this.CloseAndEmptyFileToolStripMenuItemClick);
 			// 
 			// HtmlDisplayToolStripMenuItem
 			// 
@@ -342,16 +342,16 @@ namespace WebLogViewver
 			// contextMenuStrip2
 			// 
 			this.contextMenuStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-									this.toutFermerToolStripMenuItem,
+									this.toutCloseToolStripMenuItem,
 									this.toutFermerEtSupprimerLesFichiersToolStripMenuItem});
 			this.contextMenuStrip2.Name = "contextMenuStrip2";
 			this.contextMenuStrip2.Size = new System.Drawing.Size(269, 70);
 			// 
-			// toutFermerToolStripMenuItem
+			// toutCloseToolStripMenuItem
 			// 
-			this.toutFermerToolStripMenuItem.Name = "toutFermerToolStripMenuItem";
-			this.toutFermerToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
-			this.toutFermerToolStripMenuItem.Text = "Tout Fermer";
+			this.toutCloseToolStripMenuItem.Name = "toutCloseToolStripMenuItem";
+			this.toutCloseToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
+			this.toutCloseToolStripMenuItem.Text = "Tout Fermer";
 			// 
 			// toutFermerEtSupprimerLesFichiersToolStripMenuItem
 			// 
@@ -370,27 +370,27 @@ namespace WebLogViewver
 			this.Text = "WebLogViewver";
 			this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.MainFormMouseUp);
 			this.tabControl1.ResumeLayout(false);
-			this.tabPage1.ResumeLayout(false);
+			this.tabConfig.ResumeLayout(false);
 			this.gp_Files.ResumeLayout(false);
 			this.gp_Files.PerformLayout();
 			this.gp_Timer.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.num_Freq)).EndInit();
 			this.gb_WatchType.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).EndInit();
-			this.contextMenuStrip1.ResumeLayout(false);
+			this.contextMenuStripFileTabs.ResumeLayout(false);
 			this.contextMenuStrip2.ResumeLayout(false);
 			this.ResumeLayout(false);
 		}
 		private System.Windows.Forms.ToolStripMenuItem toutFermerEtSupprimerLesFichiersToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem toutFermerToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem toutCloseToolStripMenuItem;
 		private System.Windows.Forms.ContextMenuStrip contextMenuStrip2;
 		private System.Windows.Forms.Label lbl_Path;
 		private System.Windows.Forms.ToolStripMenuItem HtmlDisplayToolStripMenuItem;
 		private System.Windows.Forms.ComboBox cb_Path;
-		private System.Windows.Forms.ToolStripMenuItem fermerEtViderFichierToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem fermerEtSupprimerFichierToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem fermerToolStripMenuItem;
-		private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+		private System.Windows.Forms.ToolStripMenuItem CloseAndEmptyFileToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem CloseAndDeleteFileToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem CloseToolStripMenuItem;
+		private System.Windows.Forms.ContextMenuStrip contextMenuStripFileTabs;
 		private System.Windows.Forms.GroupBox gp_Timer;
 		private System.Windows.Forms.GroupBox gp_Files;
 		private System.Windows.Forms.CheckBox cb_AutoStart;
@@ -409,7 +409,7 @@ namespace WebLogViewver
 		private System.IO.FileSystemWatcher fileSystemWatcher1;
 		private System.Windows.Forms.Button b_ChangeDir;
 		private System.Windows.Forms.Label label1;
-		private System.Windows.Forms.TabPage tabPage1;
+		private System.Windows.Forms.TabPage tabConfig;
 		private System.Windows.Forms.TabControl tabControl1;
 	}
 }

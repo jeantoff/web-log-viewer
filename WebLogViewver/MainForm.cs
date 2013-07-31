@@ -57,7 +57,7 @@ namespace WebLogViewver
 			PathHasChanged=false;
 			try
 			{
-				CurrentConfig =new WblvConfig(@"..\resources\config.csv");				
+				CurrentConfig =new WblvConfig(Application.StartupPath  + @"..\..\resources\config.csv");				
 			}
 			catch(FileNotFoundException ex)
 			{
@@ -182,7 +182,7 @@ namespace WebLogViewver
 				oldtabskeys.Add(tpage.Name);
 			
 			foreach(string tpname in oldtabskeys)
-				if(tpname != "tabPage1")
+				if(tpname != "tabConfig")
 					tabControl1.TabPages.RemoveByKey(tpname);
 			
 			
@@ -190,7 +190,9 @@ namespace WebLogViewver
 			
 		}
 		
-		
+		/// <summary>
+		/// synchronizes config tab control values with current configuration
+		/// </summary>
 		private void MapControlsInConfig()
 		{
 			CurrentConfig.StartTimerAuto=cb_AutoStart.Checked;
@@ -204,7 +206,10 @@ namespace WebLogViewver
 			CurrentConfig.UseFileSystemWatcher = rb_isFsWatch.Checked;
 		}
 
-		
+		/// <summary>
+		/// refresh tab webbrowser content with associated file content
+		/// </summary>
+		/// <param name="FilePath"></param>
 		private void UpdateTab(string FilePath)
 		{
 			FileInfo finf=new FileInfo(FilePath);
@@ -285,13 +290,17 @@ namespace WebLogViewver
 		}
 		*/
 		
+		/// <summary>
+		/// return a tab index according with his name
+		/// </summary>
+		/// <param name="tabName">Name of the searched tab</param>
+		/// <returns>tab index if found, else -1</returns>
 		private int SearchTabName(string tabName)
 		{
 			int index=0;
 			bool exists=false;
 			foreach(TabPage ctrl in tabControl1.TabPages)
 			{
-				
 				if(ctrl.Name == tabName)
 				{
 					exists=true;
@@ -307,6 +316,9 @@ namespace WebLogViewver
 			return index;
 		}//function
 		
+		/// <summary>
+		/// starts the timer and changes button label
+		/// </summary>
 		private void StartTimer()
 		{
 			
@@ -314,6 +326,9 @@ namespace WebLogViewver
 			timer1.Start();
 		}
 		
+		/// <summary>
+		/// stops the timer and changes button label
+		/// </summary>		
 		private void StopTimer()
 		{
 			b_TimerButton.Text="Démarrer";
@@ -321,6 +336,11 @@ namespace WebLogViewver
 		}
 					
 		
+		/// <summary>
+		/// remove a tab from tab control
+		/// </summary>
+		/// <param name="index"></param>
+		/// <returns></returns>
 		private bool RemoveTab(int index)
 		{
 		   if(index>0)
@@ -339,7 +359,12 @@ namespace WebLogViewver
 			return false;		               
 		}
 	
-				
+		/// <summary>
+		/// Get tab index from under mouse location
+		/// 
+		/// </summary>
+		/// <param name="location"></param>
+		/// <returns></returns>
 		private int GetTabIndexFromPos(Point location)
 		{
 				for(int i = 0; i < tabControl1.TabCount; i++)
@@ -422,29 +447,20 @@ namespace WebLogViewver
 		void MainFormMouseUp(object sender, MouseEventArgs e)
 		{
 			
-			//this.contextMenuStrip1.Show();
-			/*
-			if(e.Button==MouseButtons.Right)
-				this.contextMenuStrip1.Show(new Point(e.X+this.Location.X,e.Y+this.Location.Y));
-			
-			*/
 			int i=GetTabIndexFromPos(e.Location);
 				
 			if(i<0)
 				return;
-			
 						
 			if(i==0)
 			{
 				
-				contextMenuStrip1.Show(new Point(e.X+this.Location.X,e.Y+this.Location.Y+(this.contextMenuStrip1.Height/2)));
+				contextMenuStripFileTabs.Show(new Point(e.X+this.Location.X,e.Y+this.Location.Y+(this.contextMenuStripFileTabs.Height/2)));
 			}
 			else
 			{
 				
 				tabControl1.SelectedTab=tabControl1.TabPages[i];
-				
-				//tabControl1.TabPages[i].Show();
 				tabControl1.Refresh();
 				if(e.Button == MouseButtons.Middle)
 			    {
@@ -452,7 +468,7 @@ namespace WebLogViewver
 			    }
 				else if(	e.Button == MouseButtons.Right)
 				{
-					contextMenuStrip1.Tag=i;
+					contextMenuStripFileTabs.Tag=i;
 					
 					string path=CurrentConfig.WatchedDirectory + @"\"+tabControl1.TabPages[i].Name;
 					
@@ -481,19 +497,16 @@ namespace WebLogViewver
 							   
 							break;
 					}//switch
-						
-					//if(HtmlDisplayToolStripMenuItem.ch
 					
-					contextMenuStrip1.Show(new Point(e.X+this.Location.X,e.Y+this.Location.Y+(this.contextMenuStrip1.Height/2)));
-					
+					contextMenuStripFileTabs.Show(new Point(e.X+this.Location.X,e.Y+this.Location.Y+(this.contextMenuStripFileTabs.Height/2)));
 				}
 			}
 		}//function
 			
 				
-		void FermerToolStripMenuItemClick(object sender, EventArgs e)
+		void CloseToolStripMenuItemClick(object sender, EventArgs e)
 		{
-			int tabindex=(int) contextMenuStrip1.Tag;
+			int tabindex=(int) contextMenuStripFileTabs.Tag;
 			
 			if(RemoveTab(tabindex))
 			{
@@ -510,14 +523,13 @@ namespace WebLogViewver
 			}
 		}
 
-		void FermerEtSupprimerFichierToolStripMenuItemClick(object sender, EventArgs e)
+		void CloseAndDeleteFileToolStripMenuItemClick(object sender, EventArgs e)
 		{
 			bool timeron=timer1.Enabled;
 			if(timeron)
 				StopTimer();
 			
-			
-			int tabindex=(int) contextMenuStrip1.Tag;
+			int tabindex=(int) contextMenuStripFileTabs.Tag;
 			string path=CurrentConfig.WatchedDirectory + @"\"+tabControl1.TabPages[tabindex].Name;
 			
 			if(RemoveTab(tabindex))
@@ -534,8 +546,9 @@ namespace WebLogViewver
 				}
 								
 			}	
-		if(timeron)
-			StartTimer();
+			
+			if(timeron)
+				StartTimer();
 		}//function
 		
 		void B_TimerButtonClick(object sender, EventArgs e)
@@ -578,7 +591,7 @@ namespace WebLogViewver
 		void HtmlDisplayToolStripMenuItemCheckedChanged(object sender, EventArgs e)
 		{
 			
-			int tabindex=(int) contextMenuStrip1.Tag;
+			int tabindex=(int) contextMenuStripFileTabs.Tag;
 			string path=CurrentConfig.WatchedDirectory + @"\"+tabControl1.TabPages[tabindex].Name;
 			
 			if(HtmlDisplayToolStripMenuItem.Checked)
@@ -608,19 +621,19 @@ namespace WebLogViewver
 				HtmlDisplayToolStripMenuItem.Checked=true;
 		}
 		
-		void TabPage1Click(object sender, EventArgs e)
+		void TabConfigClick(object sender, EventArgs e)
 		{
 			StopTimer();
 		}
 		
-		void FermerEtViderFichierToolStripMenuItemClick(object sender, EventArgs e)
+		void CloseAndEmptyFileToolStripMenuItemClick(object sender, EventArgs e)
 		{
 			bool timeron=timer1.Enabled;
 			if(timeron)
 				StopTimer();
 			
 			
-			int tabindex=(int) contextMenuStrip1.Tag;
+			int tabindex=(int) contextMenuStripFileTabs.Tag;
 			string path=CurrentConfig.WatchedDirectory + @"\"+tabControl1.TabPages[tabindex].Name;
 			File.Delete(path);
 			

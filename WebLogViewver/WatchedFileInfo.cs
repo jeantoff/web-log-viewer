@@ -39,7 +39,7 @@ namespace WebLogViewver
 			
 			
 	/// <summary>
-	/// Description of WatchedFileInfo.
+	/// Keep informations for a file watched
 	/// </summary>
 	public class WatchedFileInfo
 	{
@@ -67,7 +67,7 @@ namespace WebLogViewver
 		}
 		
 		
-		public void Init(FileInfo info,bool keepFileContent)
+		private void Init(FileInfo info,bool keepFileContent)
 		{
 			_content="";
 			currentMD5 = new byte[16];
@@ -199,6 +199,11 @@ namespace WebLogViewver
 		}
 		*/
 		
+		/// <summary>
+		/// reads a text file content into a String
+		/// </summary>
+		/// <param name="fileFullName">File's path</param>
+		/// <returns>file content</returns>
 		static string GetFileContent(string fileFullName)
 		{
 			StringBuilder sb = new StringBuilder();
@@ -217,9 +222,7 @@ namespace WebLogViewver
 			string alllines=sb.ToString();
 			return alllines;
 		}
-		
-		
-	
+
 	}//class
 	
 }//namespace

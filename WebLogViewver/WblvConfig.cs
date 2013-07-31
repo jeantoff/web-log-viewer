@@ -29,7 +29,7 @@ using System.Globalization;
 namespace WebLogViewver
 {
 	/// <summary>
-	/// Description of WblvConfig.
+	/// WebloViewer Application parameters
 	/// </summary>
 	public class WblvConfig
 	{
@@ -48,6 +48,13 @@ namespace WebLogViewver
 
 		}
 		
+		/// <summary>
+		/// new instance of WblvConfig
+		/// </summary>
+		/// <param name="timerFreq">when timer option selected, frequency (in seconds) of watchedDirectory directory </param>
+		/// <param name="watchedDirectory">Directory to watch</param>
+		/// <param name="fileFilter">filter for files to watch</param>
+		/// <param name="useFileSystemWatcher">false uses a timer, true : uses a FileSystemWatcher object</param></param>
 		public WblvConfig(int timerFreq,string watchedDirectory,string fileFilter,bool useFileSystemWatcher)
 		{
 			_watchedDirList=new List<String>();
@@ -61,18 +68,27 @@ namespace WebLogViewver
 			//_watchedDirList.Add(watchedDirectory);
 		}
 		
+		/// <summary>
+		/// if true the timer starts at application launch
+		/// </summary>
 		public bool StartTimerAuto
 		{
 			get{return _startTimerAuto;}
 			set{_startTimerAuto=value;}		
 		}
 		
+		/// <summary>
+		/// when UseFileSystemWatcher=false setup the timer frequency (seconds)
+		/// </summary>
 		public int TimerFrequency
 		{
 			get{return _timerFreq;}
 			set{_timerFreq=value;}		
 		}
 		
+		/// <summary>
+		/// get or set the directory to watch
+		/// </summary>
 		public string WatchedDirectory
 		{
 			get{return _watchedDirectory;}
@@ -86,6 +102,10 @@ namespace WebLogViewver
 			}
 		}
 		
+		/// <summary>
+		/// List of last directory watched
+		/// default : current WatchedDirectory property value
+		/// </summary>
 		public string[] WatchedDirList
 		{
 			get{
@@ -99,6 +119,9 @@ namespace WebLogViewver
 			
 		}
 		
+		/// <summary>
+		/// get or set the file filter
+		/// </summary>
 		public string FileFilter
 		{
 			get{return _fileFilter;}
@@ -112,11 +135,15 @@ namespace WebLogViewver
 			}
 		}
 		
+		/// <summary>
+		/// true : uses FileSystemWatcher, false :timer
+		/// </summary>
 		public bool UseFileSystemWatcher
 		{
 			get{return _useFileSystemWatcher;}
 			set{_useFileSystemWatcher=value;}		
 		}
+		
 		
 		public string LastFileName
 		{
@@ -125,7 +152,10 @@ namespace WebLogViewver
 		}
 				
 				
-		
+		/// <summary>
+		/// save this configuration to a csv file
+		/// </summary>
+		/// <param name="fileFullPath"></param>
 		public void SaveToFile(string fileFullPath)
 		{
             // create a writer and open the file
@@ -152,6 +182,10 @@ namespace WebLogViewver
             LastFileName=fileFullPath;
 		}
 		
+		/// <summary>
+		/// loads the configuration from a csv file
+		/// </summary>
+		/// <param name="fileFullPath"></param>
 		public void LoadFromFile(string fileFullPath)
 		{
 			LastFileName=fileFullPath;
