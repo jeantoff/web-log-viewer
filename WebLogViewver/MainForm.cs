@@ -143,7 +143,7 @@ namespace WebLogViewver
 			timer1.Interval =wlb.TimerFrequency * 1000;
 			cb_Path.Items.Clear();
 			
-			cb_Path.Items.AddRange(wlb.WatchedDirList);
+			cb_Path.Items.AddRange(wlb.WatchedDirList());
 			cb_Path.Text=wlb.WatchedDirectory;
 			
 			
@@ -210,6 +210,13 @@ namespace WebLogViewver
 		/// refresh tab webbrowser content with associated file content
 		/// </summary>
 		/// <param name="FilePath"></param>
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2122:DoNotIndirectlyExposeMethodsWithLinkDemands")]
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2122:DoNotIndirectlyExposeMethodsWithLinkDemands")]
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2122:DoNotIndirectlyExposeMethodsWithLinkDemands")]
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2122:DoNotIndirectlyExposeMethodsWithLinkDemands")]
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2122:DoNotIndirectlyExposeMethodsWithLinkDemands")]
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2122:DoNotIndirectlyExposeMethodsWithLinkDemands")]
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2122:DoNotIndirectlyExposeMethodsWithLinkDemands")]
 		private void UpdateTab(string FilePath)
 		{
 			FileInfo finf=new FileInfo(FilePath);
@@ -341,6 +348,7 @@ namespace WebLogViewver
 		/// </summary>
 		/// <param name="index"></param>
 		/// <returns></returns>
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1300:SpecifyMessageBoxOptions")]
 		private bool RemoveTab(int index)
 		{
 		   if(index>0)

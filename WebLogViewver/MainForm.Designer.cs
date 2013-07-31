@@ -34,6 +34,7 @@ namespace WebLogViewver
 		/// Do not change the method contents inside the source code editor. The Forms designer might
 		/// not be able to load this method if it was changed manually.
 		/// </summary>
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2122:DoNotIndirectlyExposeMethodsWithLinkDemands")]
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();

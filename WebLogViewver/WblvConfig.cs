@@ -106,17 +106,13 @@ namespace WebLogViewver
 		/// List of last directory watched
 		/// default : current WatchedDirectory property value
 		/// </summary>
-		public string[] WatchedDirList
-		{
-			get{
-			
+		public string[] WatchedDirList()
+		{			
 				string[] dirlist=new string[_watchedDirList.Count];
 				for(int idx=0;idx< _watchedDirList.Count;idx++)
 					dirlist[idx]=_watchedDirList[idx];
 			
-				return dirlist;
-			}
-			
+				return dirlist;	
 		}
 		
 		/// <summary>
@@ -170,10 +166,10 @@ namespace WebLogViewver
 			str_dirlist=str_dirlist.TrimStart('|');
 
 			configline= StartTimerAuto?"1":"0" +";" +
-				TimerFrequency.ToString() + ";" +
+				TimerFrequency.ToString(CultureInfo.CurrentCulture) + ";" +
 				WatchedDirectory +";"+
 				FileFilter +";" +
-				UseFileSystemWatcher.ToString()  +";" +
+				UseFileSystemWatcher.ToString(CultureInfo.CurrentCulture)  +";" +
 				str_dirlist;
 				
 				 tw.WriteLine(configline);
@@ -197,7 +193,7 @@ namespace WebLogViewver
 			
            
             StartTimerAuto = parms[0]=="0"?false:true;
-            TimerFrequency = int.Parse(parms[1] );
+            TimerFrequency = int.Parse(parms[1],CultureInfo.CurrentCulture );
            
             FileFilter= parms[3];
             UseFileSystemWatcher=bool.Parse( parms[4]);
@@ -215,9 +211,7 @@ namespace WebLogViewver
             	_watchedDirList.Add(parms[2]);	
             }
             
-             WatchedDirectory = parms[2];
-            
-            
+             WatchedDirectory = parms[2];   
 		}
 		
 		
