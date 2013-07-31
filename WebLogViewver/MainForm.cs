@@ -57,7 +57,7 @@ namespace WebLogViewver
 			PathHasChanged=false;
 			try
 			{
-				CurrentConfig =new WblvConfig("config.csv");				
+				CurrentConfig =new WblvConfig(@"..\resources\config.csv");				
 			}
 			catch(FileNotFoundException ex)
 			{

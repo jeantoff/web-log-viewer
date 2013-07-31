@@ -17,7 +17,7 @@
     <SourceAnalysisOverrideSettingsFile>C:\Users\cbv\AppData\Roaming\ICSharpCode/SharpDevelop4\Settings.SourceAnalysis</SourceAnalysisOverrideSettingsFile>
     <RunCodeAnalysis>False</RunCodeAnalysis>
     <RunSourceAnalysis>False</RunSourceAnalysis>
-    <ApplicationIcon>bin\Debug\wlw.ico</ApplicationIcon>
+    <ApplicationIcon>bin\resources\wlw.ico</ApplicationIcon>
     <SignAssembly>False</SignAssembly>
     <DelaySign>False</DelaySign>
     <AssemblyOriginatorKeyMode>File</AssemblyOriginatorKeyMode>
