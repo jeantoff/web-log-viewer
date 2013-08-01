@@ -21,16 +21,16 @@
     along with WebLogViewer.  If not, see <http://www.gnu.org/licenses/>.
  */
 using System;
-using System.Collections;
+//using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.IO;
 
-using System.Security;
-using System.Security.Permissions;
-using System.Runtime.InteropServices;
+//using System.Security;
+//using System.Security.Permissions;
+//using System.Runtime.InteropServices;
 //using System.Text;
 
 [assembly:CLSCompliant(true)]

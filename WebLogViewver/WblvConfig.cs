@@ -23,8 +23,8 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
+using System.Diagnostics;//@todo : remove
+using System.Globalization;//cast operations with current culture
 
 namespace WebLogViewver
 {
@@ -33,7 +33,6 @@ namespace WebLogViewver
 	/// </summary>
 	public class WblvConfig
 	{
-		
 		private int _timerFreq;
 		private string _watchedDirectory;
 		private string _fileFilter;
@@ -63,9 +62,6 @@ namespace WebLogViewver
 			FileFilter =fileFilter;
 			UseFileSystemWatcher =useFileSystemWatcher;
 			_startTimerAuto=false;
-			
-			
-			//_watchedDirList.Add(watchedDirectory);
 		}
 		
 		/// <summary>
@@ -139,8 +135,7 @@ namespace WebLogViewver
 			get{return _useFileSystemWatcher;}
 			set{_useFileSystemWatcher=value;}		
 		}
-		
-		
+
 		public string LastFileName
 		{
 			get{return _lastFileName;}
