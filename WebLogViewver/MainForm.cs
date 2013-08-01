@@ -44,8 +44,8 @@ namespace WebLogViewver
 	public partial class MainForm : Form
 	{
 	
-		Dictionary<string,WatchedFileInfo> WatchedFilesList;
-		WblvConfig CurrentConfig;
+		private Dictionary<string,WatchedFileInfo> WatchedFilesList;
+		private WblvConfig CurrentConfig;
 		private bool PathHasChanged;
 		
 		private Settings1 appsettings= new Settings1();
@@ -54,24 +54,24 @@ namespace WebLogViewver
 		{
 			InitializeComponent();
 			
-			PathHasChanged=false;
+			this.PathHasChanged=false;
 			try
 			{
-				CurrentConfig =new WblvConfig(Application.StartupPath  + @"..\..\resources\config.csv");				
+				this.CurrentConfig =new WblvConfig(Application.StartupPath  + @"..\..\resources\config.csv");				
 			}
 			catch(FileNotFoundException ex)
 			{
 			
 				MessageBox.Show(ex.Message+"\nUne configuration par défaut va être générée.","Fichier introuvable",MessageBoxButtons.OK,MessageBoxIcon.Error,MessageBoxDefaultButton.Button1,MessageBoxOptions.DefaultDesktopOnly);
 				
-				CurrentConfig =new WblvConfig(5, appsettings.default_directory,"*.*",false);
+				this.CurrentConfig =new WblvConfig(5, appsettings.default_directory,"*.*",false);
 				
-				CurrentConfig.SaveToFile(appsettings.default_configFileName);
+				this.CurrentConfig.SaveToFile(appsettings.default_configFileName);
 			}
 			
-			WatchedFilesList = new Dictionary<string, WatchedFileInfo>();
+			this.WatchedFilesList = new Dictionary<string, WatchedFileInfo>();
 			
-			if(!CurrentConfig.StartTimerAuto || CurrentConfig.UseFileSystemWatcher )
+			if(!this.CurrentConfig.StartTimerAuto || this.CurrentConfig.UseFileSystemWatcher )
 				StopTimer();
 			else
 				StartTimer();
@@ -88,40 +88,24 @@ namespace WebLogViewver
 		//PRIVATE FUNCTIONS ----------------------------------------------------------------------
 		private void  UpdateFilesList()
 		{
-		//	Debug.WriteLine("updating file list");
-			DirectoryInfo di = new DirectoryInfo(CurrentConfig.WatchedDirectory);
-			FileInfo[] fileslist= di.GetFiles(CurrentConfig.FileFilter);
-			
-			
-			foreach(TabPage tp in tabControl1.TabPages)
-			{
-				
-				tp.BackColor=Color.Transparent;
-				
-			}
-			tabControl1.Refresh();
-			
-		
+			DirectoryInfo di = new DirectoryInfo(this.CurrentConfig.WatchedDirectory);
+			FileInfo[] fileslist= di.GetFiles(this.CurrentConfig.FileFilter);
+
 			foreach(FileInfo finf in fileslist)
 			{
-				
-				if( !WatchedFilesList.ContainsKey(finf.FullName))
+				if( !this.WatchedFilesList.ContainsKey(finf.FullName))
 				{
-					WatchedFilesList.Add(finf.FullName,new WatchedFileInfo(finf));
+					this.WatchedFilesList.Add(finf.FullName,new WatchedFileInfo(finf));
 					UpdateTab(finf.FullName);
 				}	
 				else
 				{
-					if(WatchedFilesList[finf.FullName].Update())
+					if(this.WatchedFilesList[finf.FullName].Update())
 					{
-						
 						UpdateTab(finf.FullName);
 					}
 				}
-				
 			}	//foreach
-					
-			
 		}//function
 	
 		/*[SecuritySafeCritical]*/
@@ -129,15 +113,13 @@ namespace WebLogViewver
 		private void ApplyConfig(WblvConfig wlb)
 		{
 			StopTimer();
-			
 
 			if(wlb == null)
-				wlb=CurrentConfig;
+				wlb=this.CurrentConfig;
 			
 			//EnvironmentPermission envPermission = new EnvironmentPermission( EnvironmentPermissionAccess.Write,fileSystemWatcher1.Path);
          	//envPermission.Assert();
 			fileSystemWatcher1.Path=wlb.WatchedDirectory;
-			//tb_Path.Text=wlb.WatchedDirectory;
 			tb_Filtre.Text=wlb.FileFilter;
 			num_Freq.Value = wlb.TimerFrequency;
 			timer1.Interval =wlb.TimerFrequency * 1000;
@@ -145,9 +127,8 @@ namespace WebLogViewver
 			
 			cb_Path.Items.AddRange(wlb.WatchedDirList());
 			cb_Path.Text=wlb.WatchedDirectory;
-			
-			
-			if(CurrentConfig.StartTimerAuto)
+	
+			if(this.CurrentConfig.StartTimerAuto)
 			{
 				cb_AutoStart.Checked=true;
 			}
@@ -158,8 +139,7 @@ namespace WebLogViewver
 				fileSystemWatcher1.EnableRaisingEvents=true;
 				rb_isFsWatch.Checked=true;
 				rb_isTimer.Checked=false;
-				b_TimerButton.Enabled=false;
-				
+				b_TimerButton.Enabled=false;	
 			}
 			else
 			{
@@ -168,10 +148,7 @@ namespace WebLogViewver
 				rb_isFsWatch.Checked=false;	
 				rb_isTimer.Checked=true;
 				b_TimerButton.Enabled=true;
-				
-	
-			}
-				
+			}	
 		}
 		
 		private void DeletePreviousPathTabs()
@@ -184,10 +161,8 @@ namespace WebLogViewver
 			foreach(string tpname in oldtabskeys)
 				if(tpname != "tabConfig")
 					tabControl1.TabPages.RemoveByKey(tpname);
-			
-			
+
 			Debug.WriteLine("ici");
-			
 		}
 		
 		/// <summary>
@@ -195,15 +170,11 @@ namespace WebLogViewver
 		/// </summary>
 		private void MapControlsInConfig()
 		{
-			CurrentConfig.StartTimerAuto=cb_AutoStart.Checked;
-			//CurrentConfig.WatchedDirectory = fileSystemWatcher1.Path;
-			
-			//CurrentConfig.WatchedDirectory = tb_Path.Text;
-			CurrentConfig.WatchedDirectory=cb_Path.Text;
-			
-			CurrentConfig.FileFilter = tb_Filtre.Text;
-			CurrentConfig.TimerFrequency =(int) num_Freq.Value;
-			CurrentConfig.UseFileSystemWatcher = rb_isFsWatch.Checked;
+			this.CurrentConfig.StartTimerAuto=cb_AutoStart.Checked;
+			this.CurrentConfig.WatchedDirectory=cb_Path.Text;
+			this.CurrentConfig.FileFilter = tb_Filtre.Text;
+			this.CurrentConfig.TimerFrequency =(int) num_Freq.Value;
+			this.CurrentConfig.UseFileSystemWatcher = rb_isFsWatch.Checked;
 		}
 
 		/// <summary>
@@ -226,10 +197,10 @@ namespace WebLogViewver
 			//Panel pnl;
 			int index=0;
 						
-			if(PathHasChanged)
+			if(this.PathHasChanged)
 			{
 				DeletePreviousPathTabs();
-				PathHasChanged=false;
+				this.PathHasChanged=false;
 			}
 	
 			index=SearchTabName(basename);
@@ -255,48 +226,29 @@ namespace WebLogViewver
 				wb=(WebBrowser) tp.Controls[widx];
 			}
 					
-			if((WatchedFilesList[FilePath].DisplayType== DisplayTypeEnum.Undefined && !WatchedFilesList[FilePath].Content.StartsWith("<",StringComparison.CurrentCulture))
-			   || WatchedFilesList[FilePath].DisplayType== DisplayTypeEnum.RawText)
+			if((this.WatchedFilesList[FilePath].DisplayType== DisplayTypeEnum.Undefined && !this.WatchedFilesList[FilePath].Content.StartsWith("<",StringComparison.CurrentCulture))
+			   || this.WatchedFilesList[FilePath].DisplayType== DisplayTypeEnum.RawText)
 			{
-				wb.DocumentText="<pre>" + WatchedFilesList[FilePath].Content + "</pre>";
+				wb.DocumentText="<pre>" + this.WatchedFilesList[FilePath].Content + "</pre>";
 			}
 			else
 			{
-				wb.DocumentText= WatchedFilesList[FilePath].Content ;
+				wb.DocumentText= this.WatchedFilesList[FilePath].Content ;
 			}
-			  
-			
-			
+
 			tabControl1.SelectedTab= tp;
-			
 			/*
 			System.Uri uri =new Uri(FilePath);
 			wb.Url=uri;
 			wb.Update();
 			*/
-
        		Application.DoEvents();
-
 	        if (wb.Document!=null  && wb.Document != null)
 	        {
 	            wb.Document.Window.ScrollTo(0, wb.Document.Body.ScrollRectangle.Height);
-	        }
-
-			//SetToForeground();                 
+	        }                 
 		}//function
-		
-		/*
-		private void SetToForeground()
-		{
-			  Process thisProcess = Process.GetCurrentProcess();
-    			//Process[] peerProcesses = Process.GetProcessesByName(thisProcess.ProcessName.Replace(".vshost", string.Empty));
-
-			   // Process[] processes = Process.GetProcessesByName(Application.ex);
-			   SetForegroundWindow(thisProcess.MainWindowHandle);
-			   this.BringToFront();
-		}
-		*/
-		
+				
 		/// <summary>
 		/// return a tab index according with his name
 		/// </summary>
@@ -313,7 +265,6 @@ namespace WebLogViewver
 					exists=true;
 					break;
 				}
-				
 				index++;
 			}
 			
@@ -328,6 +279,8 @@ namespace WebLogViewver
 		/// </summary>
 		private void StartTimer()
 		{
+			if(this.CurrentConfig.UseFileSystemWatcher)
+				return;
 			
 			b_TimerButton.Text="Arrêter";			
 			timer1.Start();
@@ -338,6 +291,9 @@ namespace WebLogViewver
 		/// </summary>		
 		private void StopTimer()
 		{
+			if(this.CurrentConfig.UseFileSystemWatcher)
+				return;
+						
 			b_TimerButton.Text="Démarrer";
 			timer1.Stop();
 		}
@@ -396,9 +352,9 @@ namespace WebLogViewver
 			MapControlsInConfig();	
 			ApplyConfig(null);
 			
-			CurrentConfig.SaveToFile("config.csv");
+			this.CurrentConfig.SaveToFile("config.csv");
 			
-			if(!CurrentConfig.UseFileSystemWatcher)
+			if(!this.CurrentConfig.UseFileSystemWatcher)
 			{
 				StartTimer();
 				
@@ -415,14 +371,12 @@ namespace WebLogViewver
 			folderBrowserDialog1.ShowDialog();
 			if(folderBrowserDialog1.SelectedPath.Length>0)
 			{
-				
-				if(CurrentConfig.WatchedDirectory != folderBrowserDialog1.SelectedPath)
+				if(this.CurrentConfig.WatchedDirectory != folderBrowserDialog1.SelectedPath)
 				{
 					fileSystemWatcher1.Path=folderBrowserDialog1.SelectedPath;
-					//tb_Path.Text=folderBrowserDialog1.SelectedPath;
+
 					cb_Path.Text=folderBrowserDialog1.SelectedPath;
-					//DeletePreviousPathTabs();
-					PathHasChanged=true;
+					this.PathHasChanged=true;
 					MapControlsInConfig();
 					ApplyConfig(null);
 				}
@@ -432,11 +386,8 @@ namespace WebLogViewver
 		
 		void FileSystemWatcher1Changed(object sender, FileSystemEventArgs e)
 		{
-			//this.WindowState= FormWindowState.Maximized;
-			
 			string filePath=e.FullPath;
 			Debug.WriteLine(filePath);
-			//Console.WriteLine(filePath);
 			UpdateTab(filePath);
 		}
 
@@ -454,7 +405,6 @@ namespace WebLogViewver
 				
 		void MainFormMouseUp(object sender, MouseEventArgs e)
 		{
-			
 			int i=GetTabIndexFromPos(e.Location);
 				
 			if(i<0)
@@ -462,12 +412,10 @@ namespace WebLogViewver
 						
 			if(i==0)
 			{
-				
 				contextMenuStripFileTabs.Show(new Point(e.X+this.Location.X,e.Y+this.Location.Y+(this.contextMenuStripFileTabs.Height/2)));
 			}
 			else
 			{
-				
 				tabControl1.SelectedTab=tabControl1.TabPages[i];
 				tabControl1.Refresh();
 				if(e.Button == MouseButtons.Middle)
@@ -478,17 +426,16 @@ namespace WebLogViewver
 				{
 					contextMenuStripFileTabs.Tag=i;
 					
-					string path=CurrentConfig.WatchedDirectory + @"\"+tabControl1.TabPages[i].Name;
+					string path=this.CurrentConfig.WatchedDirectory + @"\"+tabControl1.TabPages[i].Name;
 					
-					if(WatchedFilesList[path].DisplayType==DisplayTypeEnum.Html)
+					if(this.WatchedFilesList[path].DisplayType==DisplayTypeEnum.Html)
 						HtmlDisplayToolStripMenuItem.Checked=true;
 					else
 						HtmlDisplayToolStripMenuItem.Checked=false;
 					
 					
-					switch(WatchedFilesList[path].DisplayType)
-					{
-							
+					switch(this.WatchedFilesList[path].DisplayType)
+					{	
 						case DisplayTypeEnum.Html:
 							HtmlDisplayToolStripMenuItem.Checked=true;
 							break;
@@ -498,7 +445,7 @@ namespace WebLogViewver
 							break;
 							
 						case DisplayTypeEnum.Undefined:
-							if(WatchedFilesList[path].Content.StartsWith("<",StringComparison.CurrentCulture))
+							if(this.WatchedFilesList[path].Content.StartsWith("<",StringComparison.CurrentCulture))
 								HtmlDisplayToolStripMenuItem.Checked=true;
 							else
 								HtmlDisplayToolStripMenuItem.Checked=false;
@@ -518,14 +465,12 @@ namespace WebLogViewver
 			
 			if(RemoveTab(tabindex))
 			{
-				
 				if(tabControl1.TabPages.Count>1)
 				{
 					if(tabindex==tabControl1.TabPages.Count)
 						tabindex=tabControl1.TabPages.Count -1;
 					
 					tabControl1.SelectedTab=tabControl1.TabPages[tabindex];
-					
 				}
 				
 			}
@@ -538,7 +483,7 @@ namespace WebLogViewver
 				StopTimer();
 			
 			int tabindex=(int) contextMenuStripFileTabs.Tag;
-			string path=CurrentConfig.WatchedDirectory + @"\"+tabControl1.TabPages[tabindex].Name;
+			string path=this.CurrentConfig.WatchedDirectory + @"\"+tabControl1.TabPages[tabindex].Name;
 			
 			if(RemoveTab(tabindex))
 			{
@@ -550,9 +495,7 @@ namespace WebLogViewver
 						tabindex=tabControl1.TabPages.Count -1;
 					
 					tabControl1.SelectedTab=tabControl1.TabPages[tabindex];
-					
-				}
-								
+				}				
 			}	
 			
 			if(timeron)
@@ -586,8 +529,7 @@ namespace WebLogViewver
 		
 		void Timer1Tick(object sender, EventArgs e)
 		{
-			
-			if(  CurrentConfig.UseFileSystemWatcher)
+			if(  this.CurrentConfig.UseFileSystemWatcher)
 			{
 				StopTimer();	
 			}
@@ -598,24 +540,23 @@ namespace WebLogViewver
 		
 		void HtmlDisplayToolStripMenuItemCheckedChanged(object sender, EventArgs e)
 		{
-			
 			int tabindex=(int) contextMenuStripFileTabs.Tag;
-			string path=CurrentConfig.WatchedDirectory + @"\"+tabControl1.TabPages[tabindex].Name;
+			string path=this.CurrentConfig.WatchedDirectory + @"\"+tabControl1.TabPages[tabindex].Name;
 			
 			if(HtmlDisplayToolStripMenuItem.Checked)
 			{
 				Debug.WriteLine("Mode html");
-				WatchedFilesList[path].DisplayType=DisplayTypeEnum.Html;
+				this.WatchedFilesList[path].DisplayType=DisplayTypeEnum.Html;
 				tabControl1.Refresh();
 			}
 			else
 			{
-				WatchedFilesList[path].DisplayType=DisplayTypeEnum.RawText;
+				this.WatchedFilesList[path].DisplayType=DisplayTypeEnum.RawText;
 				
 				TabPage tabctrl=tabControl1.TabPages[tabindex];
 				int widx=tabctrl.Controls.IndexOfKey("wb_"+tabctrl.Name);
 				WebBrowser webros=(WebBrowser) tabctrl.Controls[widx];
-				webros.DocumentText="<pre>" + WatchedFilesList[path].Content + "</pre>";
+				webros.DocumentText="<pre>" + this.WatchedFilesList[path].Content + "</pre>";
 				tabControl1.Refresh();
 			}
 
@@ -640,9 +581,8 @@ namespace WebLogViewver
 			if(timeron)
 				StopTimer();
 			
-			
 			int tabindex=(int) contextMenuStripFileTabs.Tag;
-			string path=CurrentConfig.WatchedDirectory + @"\"+tabControl1.TabPages[tabindex].Name;
+			string path=this.CurrentConfig.WatchedDirectory + @"\"+tabControl1.TabPages[tabindex].Name;
 			File.Delete(path);
 			
 			System.IO.FileStream fs= File.Create(path);
