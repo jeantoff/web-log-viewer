@@ -66,7 +66,7 @@ namespace WebLogViewver
 			this.CloseAndDeleteFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.CloseAndEmptyFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.HtmlDisplayToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
+			this.contextMenuStripConfigTab = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.toutCloseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toutFermerEtSupprimerLesFichiersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.tabControl1.SuspendLayout();
@@ -77,7 +77,7 @@ namespace WebLogViewver
 			this.gb_WatchType.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).BeginInit();
 			this.contextMenuStripFileTabs.SuspendLayout();
-			this.contextMenuStrip2.SuspendLayout();
+			this.contextMenuStripConfigTab.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// tabControl1
@@ -340,13 +340,13 @@ namespace WebLogViewver
 			this.HtmlDisplayToolStripMenuItem.CheckedChanged += new System.EventHandler(this.HtmlDisplayToolStripMenuItemCheckedChanged);
 			this.HtmlDisplayToolStripMenuItem.Click += new System.EventHandler(this.HtmlDisplayToolStripMenuItemClick);
 			// 
-			// contextMenuStrip2
+			// contextMenuStripConfigTab
 			// 
-			this.contextMenuStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+			this.contextMenuStripConfigTab.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
 									this.toutCloseToolStripMenuItem,
 									this.toutFermerEtSupprimerLesFichiersToolStripMenuItem});
-			this.contextMenuStrip2.Name = "contextMenuStrip2";
-			this.contextMenuStrip2.Size = new System.Drawing.Size(269, 70);
+			this.contextMenuStripConfigTab.Name = "contextMenuStrip2";
+			this.contextMenuStripConfigTab.Size = new System.Drawing.Size(269, 70);
 			// 
 			// toutCloseToolStripMenuItem
 			// 
@@ -379,12 +379,12 @@ namespace WebLogViewver
 			this.gb_WatchType.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).EndInit();
 			this.contextMenuStripFileTabs.ResumeLayout(false);
-			this.contextMenuStrip2.ResumeLayout(false);
+			this.contextMenuStripConfigTab.ResumeLayout(false);
 			this.ResumeLayout(false);
 		}
 		private System.Windows.Forms.ToolStripMenuItem toutFermerEtSupprimerLesFichiersToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem toutCloseToolStripMenuItem;
-		private System.Windows.Forms.ContextMenuStrip contextMenuStrip2;
+		private System.Windows.Forms.ContextMenuStrip contextMenuStripConfigTab;
 		private System.Windows.Forms.Label lbl_Path;
 		private System.Windows.Forms.ToolStripMenuItem HtmlDisplayToolStripMenuItem;
 		private System.Windows.Forms.ComboBox cb_Path;

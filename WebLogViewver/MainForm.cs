@@ -248,7 +248,47 @@ namespace WebLogViewver
 	            wb.Document.Window.ScrollTo(0, wb.Document.Body.ScrollRectangle.Height);
 	        }                 
 		}//function
-				
+		
+		
+		 void OpenConfigContextMenu(MouseEventArgs e,int tabindex)
+		{
+			contextMenuStripConfigTab.Show(new Point(e.X+this.Location.X,e.Y+this.Location.Y+(this.contextMenuStripFileTabs.Height/2)));	
+		}
+
+		
+		void OpenFileTabContextMenu(MouseEventArgs e,int tabindex)
+		{
+			contextMenuStripFileTabs.Tag=tabindex;
+			string path=this.CurrentConfig.WatchedDirectory + @"\"+tabControl1.TabPages[tabindex].Name;
+			
+			if(this.WatchedFilesList[path].DisplayType==DisplayTypeEnum.Html)
+				HtmlDisplayToolStripMenuItem.Checked=true;
+			else
+				HtmlDisplayToolStripMenuItem.Checked=false;
+			
+			
+			switch(this.WatchedFilesList[path].DisplayType)
+			{	
+				case DisplayTypeEnum.Html:
+					HtmlDisplayToolStripMenuItem.Checked=true;
+					break;
+					
+				case DisplayTypeEnum.RawText:
+					HtmlDisplayToolStripMenuItem.Checked=false;
+					break;
+					
+				case DisplayTypeEnum.Undefined:
+					if(this.WatchedFilesList[path].Content.StartsWith("<",StringComparison.CurrentCulture))
+						HtmlDisplayToolStripMenuItem.Checked=true;
+					else
+						HtmlDisplayToolStripMenuItem.Checked=false;
+					   
+					break;
+			}//switch
+			
+			contextMenuStripFileTabs.Show(new Point(e.X+this.Location.X,e.Y+this.Location.Y+(this.contextMenuStripFileTabs.Height/2)));
+		}
+		
 		/// <summary>
 		/// return a tab index according with his name
 		/// </summary>
@@ -297,7 +337,15 @@ namespace WebLogViewver
 			b_TimerButton.Text="Démarrer";
 			timer1.Stop();
 		}
-					
+		
+
+
+		private void SelectTab(int tabindex)
+		{
+			tabControl1.SelectedTab=tabControl1.TabPages[tabindex];
+			tabControl1.Refresh();
+		}
+		
 		
 		/// <summary>
 		/// remove a tab from tab control
@@ -405,57 +453,33 @@ namespace WebLogViewver
 				
 		void MainFormMouseUp(object sender, MouseEventArgs e)
 		{
-			int i=GetTabIndexFromPos(e.Location);
+			int tabindex=GetTabIndexFromPos(e.Location);
+			
+			Debug.WriteLine("tab "+tabindex + " selected");
+			switch(tabindex)
+			{	
+				case -1:
+					break;
+					
+				case 0:
+					
+					OpenConfigContextMenu( e,tabindex);
+					
+					break;
 				
-			if(i<0)
-				return;
-						
-			if(i==0)
-			{
-				contextMenuStripFileTabs.Show(new Point(e.X+this.Location.X,e.Y+this.Location.Y+(this.contextMenuStripFileTabs.Height/2)));
-			}
-			else
-			{
-				tabControl1.SelectedTab=tabControl1.TabPages[i];
-				tabControl1.Refresh();
-				if(e.Button == MouseButtons.Middle)
-			    {
-					RemoveTab(i);
-			    }
-				else if(	e.Button == MouseButtons.Right)
-				{
-					contextMenuStripFileTabs.Tag=i;
+				default:
+					if(e.Button == MouseButtons.Middle)
+			    	{
+						SelectTab(tabindex);
+					}	
+					else if(e.Button == MouseButtons.Right)
+					{
+						OpenFileTabContextMenu(e,tabindex);
+					}	
+					break;
 					
-					string path=this.CurrentConfig.WatchedDirectory + @"\"+tabControl1.TabPages[i].Name;
-					
-					if(this.WatchedFilesList[path].DisplayType==DisplayTypeEnum.Html)
-						HtmlDisplayToolStripMenuItem.Checked=true;
-					else
-						HtmlDisplayToolStripMenuItem.Checked=false;
-					
-					
-					switch(this.WatchedFilesList[path].DisplayType)
-					{	
-						case DisplayTypeEnum.Html:
-							HtmlDisplayToolStripMenuItem.Checked=true;
-							break;
-							
-						case DisplayTypeEnum.RawText:
-							HtmlDisplayToolStripMenuItem.Checked=false;
-							break;
-							
-						case DisplayTypeEnum.Undefined:
-							if(this.WatchedFilesList[path].Content.StartsWith("<",StringComparison.CurrentCulture))
-								HtmlDisplayToolStripMenuItem.Checked=true;
-							else
-								HtmlDisplayToolStripMenuItem.Checked=false;
-							   
-							break;
-					}//switch
-					
-					contextMenuStripFileTabs.Show(new Point(e.X+this.Location.X,e.Y+this.Location.Y+(this.contextMenuStripFileTabs.Height/2)));
-				}
-			}
+			}//switch
+			
 		}//function
 			
 				

@@ -185,8 +185,7 @@ namespace WebLogViewver
             tr.Close();
             
             string[]parms= configline.Split(';');
-			
-           
+
             StartTimerAuto = parms[0]=="0"?false:true;
             TimerFrequency = int.Parse(parms[1],CultureInfo.CurrentCulture );
            
