@@ -76,10 +76,9 @@ namespace WebLogViewver
 			
 			if((_keepFileContent=keepFileContent))
 			{
-				//Content=new ArrayList();
 				UpdateContent();
-				
 			}
+			
 			ComputeMd5(true);	
 			
 			_DisplayType= DisplayTypeEnum.Undefined;

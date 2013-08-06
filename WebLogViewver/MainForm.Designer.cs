@@ -41,10 +41,8 @@ namespace WebLogViewver
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
 			this.tabControl1 = new System.Windows.Forms.TabControl();
 			this.tabConfig = new System.Windows.Forms.TabPage();
-			this.label4 = new System.Windows.Forms.Label();
-			this.b_TimerButton = new System.Windows.Forms.Button();
+			this.cb_ConfirmDeletes = new System.Windows.Forms.CheckBox();
 			this.gp_Files = new System.Windows.Forms.GroupBox();
-			this.lbl_Path = new System.Windows.Forms.Label();
 			this.cb_Path = new System.Windows.Forms.ComboBox();
 			this.label1 = new System.Windows.Forms.Label();
 			this.b_ChangeDir = new System.Windows.Forms.Button();
@@ -53,6 +51,7 @@ namespace WebLogViewver
 			this.gp_Timer = new System.Windows.Forms.GroupBox();
 			this.num_Freq = new System.Windows.Forms.NumericUpDown();
 			this.cb_AutoStart = new System.Windows.Forms.CheckBox();
+			this.b_TimerButton = new System.Windows.Forms.Button();
 			this.label2 = new System.Windows.Forms.Label();
 			this.b_Apply = new System.Windows.Forms.Button();
 			this.gb_WatchType = new System.Windows.Forms.GroupBox();
@@ -66,9 +65,11 @@ namespace WebLogViewver
 			this.CloseAndDeleteFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.CloseAndEmptyFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.HtmlDisplayToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.ouvrirDossierToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.contextMenuStripConfigTab = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.toutCloseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toutFermerEtSupprimerLesFichiersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.webBrowser1 = new System.Windows.Forms.WebBrowser();
 			this.tabControl1.SuspendLayout();
 			this.tabConfig.SuspendLayout();
 			this.gp_Files.SuspendLayout();
@@ -89,6 +90,7 @@ namespace WebLogViewver
 			this.tabControl1.Location = new System.Drawing.Point(0, 0);
 			this.tabControl1.Name = "tabControl1";
 			this.tabControl1.SelectedIndex = 0;
+			this.tabControl1.ShowToolTips = true;
 			this.tabControl1.Size = new System.Drawing.Size(1256, 537);
 			this.tabControl1.TabIndex = 0;
 			this.tabControl1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.MainFormMouseUp);
@@ -96,8 +98,8 @@ namespace WebLogViewver
 			// tabConfig
 			// 
 			this.tabConfig.AutoScroll = true;
-			this.tabConfig.Controls.Add(this.label4);
-			this.tabConfig.Controls.Add(this.b_TimerButton);
+			this.tabConfig.Controls.Add(this.webBrowser1);
+			this.tabConfig.Controls.Add(this.cb_ConfirmDeletes);
 			this.tabConfig.Controls.Add(this.gp_Files);
 			this.tabConfig.Controls.Add(this.gp_Timer);
 			this.tabConfig.Controls.Add(this.b_Apply);
@@ -111,50 +113,34 @@ namespace WebLogViewver
 			this.tabConfig.UseVisualStyleBackColor = true;
 			this.tabConfig.Click += new System.EventHandler(this.TabConfigClick);
 			// 
-			// label4
+			// cb_ConfirmDeletes
 			// 
-			this.label4.Location = new System.Drawing.Point(288, 431);
-			this.label4.Name = "label4";
-			this.label4.Size = new System.Drawing.Size(44, 17);
-			this.label4.TabIndex = 10;
-			this.label4.Text = "Timer";
-			// 
-			// b_TimerButton
-			// 
-			this.b_TimerButton.Location = new System.Drawing.Point(346, 425);
-			this.b_TimerButton.Name = "b_TimerButton";
-			this.b_TimerButton.Size = new System.Drawing.Size(75, 23);
-			this.b_TimerButton.TabIndex = 9;
-			this.b_TimerButton.Text = "Démarrer";
-			this.b_TimerButton.UseVisualStyleBackColor = true;
-			this.b_TimerButton.Click += new System.EventHandler(this.B_TimerButtonClick);
+			this.cb_ConfirmDeletes.Location = new System.Drawing.Point(14, 253);
+			this.cb_ConfirmDeletes.Name = "cb_ConfirmDeletes";
+			this.cb_ConfirmDeletes.Size = new System.Drawing.Size(212, 34);
+			this.cb_ConfirmDeletes.TabIndex = 14;
+			this.cb_ConfirmDeletes.Text = "Confirmer les suppressions et vidages de fichiers";
+			this.cb_ConfirmDeletes.ThreeState = true;
+			this.cb_ConfirmDeletes.UseVisualStyleBackColor = true;
 			// 
 			// gp_Files
 			// 
-			this.gp_Files.Controls.Add(this.lbl_Path);
 			this.gp_Files.Controls.Add(this.cb_Path);
 			this.gp_Files.Controls.Add(this.label1);
 			this.gp_Files.Controls.Add(this.b_ChangeDir);
 			this.gp_Files.Controls.Add(this.tb_Filtre);
 			this.gp_Files.Controls.Add(this.label3);
-			this.gp_Files.Location = new System.Drawing.Point(8, 15);
+			this.gp_Files.Location = new System.Drawing.Point(8, 6);
 			this.gp_Files.Name = "gp_Files";
-			this.gp_Files.Size = new System.Drawing.Size(453, 184);
+			this.gp_Files.Size = new System.Drawing.Size(579, 110);
 			this.gp_Files.TabIndex = 13;
 			this.gp_Files.TabStop = false;
 			this.gp_Files.Text = "Fichiers";
 			// 
-			// lbl_Path
-			// 
-			this.lbl_Path.Location = new System.Drawing.Point(6, 58);
-			this.lbl_Path.Name = "lbl_Path";
-			this.lbl_Path.Size = new System.Drawing.Size(441, 23);
-			this.lbl_Path.TabIndex = 14;
-			// 
 			// cb_Path
 			// 
 			this.cb_Path.FormattingEnabled = true;
-			this.cb_Path.Location = new System.Drawing.Point(6, 84);
+			this.cb_Path.Location = new System.Drawing.Point(137, 23);
 			this.cb_Path.Name = "cb_Path";
 			this.cb_Path.Size = new System.Drawing.Size(366, 21);
 			this.cb_Path.TabIndex = 14;
@@ -169,7 +155,7 @@ namespace WebLogViewver
 			// 
 			// b_ChangeDir
 			// 
-			this.b_ChangeDir.Location = new System.Drawing.Point(378, 82);
+			this.b_ChangeDir.Location = new System.Drawing.Point(509, 21);
 			this.b_ChangeDir.Name = "b_ChangeDir";
 			this.b_ChangeDir.Size = new System.Drawing.Size(35, 23);
 			this.b_ChangeDir.TabIndex = 1;
@@ -179,14 +165,14 @@ namespace WebLogViewver
 			// 
 			// tb_Filtre
 			// 
-			this.tb_Filtre.Location = new System.Drawing.Point(6, 148);
+			this.tb_Filtre.Location = new System.Drawing.Point(137, 55);
 			this.tb_Filtre.Name = "tb_Filtre";
 			this.tb_Filtre.Size = new System.Drawing.Size(100, 20);
 			this.tb_Filtre.TabIndex = 6;
 			// 
 			// label3
 			// 
-			this.label3.Location = new System.Drawing.Point(6, 122);
+			this.label3.Location = new System.Drawing.Point(6, 58);
 			this.label3.Name = "label3";
 			this.label3.Size = new System.Drawing.Size(100, 23);
 			this.label3.TabIndex = 7;
@@ -196,10 +182,11 @@ namespace WebLogViewver
 			// 
 			this.gp_Timer.Controls.Add(this.num_Freq);
 			this.gp_Timer.Controls.Add(this.cb_AutoStart);
+			this.gp_Timer.Controls.Add(this.b_TimerButton);
 			this.gp_Timer.Controls.Add(this.label2);
-			this.gp_Timer.Location = new System.Drawing.Point(288, 234);
+			this.gp_Timer.Location = new System.Drawing.Point(8, 190);
 			this.gp_Timer.Name = "gp_Timer";
-			this.gp_Timer.Size = new System.Drawing.Size(173, 136);
+			this.gp_Timer.Size = new System.Drawing.Size(579, 57);
 			this.gp_Timer.TabIndex = 12;
 			this.gp_Timer.TabStop = false;
 			this.gp_Timer.Text = "Timer";
@@ -211,7 +198,7 @@ namespace WebLogViewver
 									0,
 									0,
 									0});
-			this.num_Freq.Location = new System.Drawing.Point(6, 50);
+			this.num_Freq.Location = new System.Drawing.Point(208, 14);
 			this.num_Freq.Maximum = new decimal(new int[] {
 									3600,
 									0,
@@ -233,16 +220,26 @@ namespace WebLogViewver
 			// 
 			// cb_AutoStart
 			// 
-			this.cb_AutoStart.Location = new System.Drawing.Point(13, 93);
+			this.cb_AutoStart.Location = new System.Drawing.Point(332, 11);
 			this.cb_AutoStart.Name = "cb_AutoStart";
 			this.cb_AutoStart.Size = new System.Drawing.Size(104, 24);
 			this.cb_AutoStart.TabIndex = 11;
 			this.cb_AutoStart.Text = "Auto start Timer";
 			this.cb_AutoStart.UseVisualStyleBackColor = true;
 			// 
+			// b_TimerButton
+			// 
+			this.b_TimerButton.Location = new System.Drawing.Point(469, 14);
+			this.b_TimerButton.Name = "b_TimerButton";
+			this.b_TimerButton.Size = new System.Drawing.Size(75, 23);
+			this.b_TimerButton.TabIndex = 9;
+			this.b_TimerButton.Text = "Démarrer";
+			this.b_TimerButton.UseVisualStyleBackColor = true;
+			this.b_TimerButton.Click += new System.EventHandler(this.B_TimerButtonClick);
+			// 
 			// label2
 			// 
-			this.label2.Location = new System.Drawing.Point(6, 24);
+			this.label2.Location = new System.Drawing.Point(6, 16);
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(161, 23);
 			this.label2.TabIndex = 5;
@@ -250,7 +247,7 @@ namespace WebLogViewver
 			// 
 			// b_Apply
 			// 
-			this.b_Apply.Location = new System.Drawing.Point(288, 376);
+			this.b_Apply.Location = new System.Drawing.Point(413, 264);
 			this.b_Apply.Name = "b_Apply";
 			this.b_Apply.Size = new System.Drawing.Size(139, 23);
 			this.b_Apply.TabIndex = 8;
@@ -262,16 +259,16 @@ namespace WebLogViewver
 			// 
 			this.gb_WatchType.Controls.Add(this.rb_isFsWatch);
 			this.gb_WatchType.Controls.Add(this.rb_isTimer);
-			this.gb_WatchType.Location = new System.Drawing.Point(8, 234);
+			this.gb_WatchType.Location = new System.Drawing.Point(8, 122);
 			this.gb_WatchType.Name = "gb_WatchType";
-			this.gb_WatchType.Size = new System.Drawing.Size(212, 136);
+			this.gb_WatchType.Size = new System.Drawing.Size(579, 62);
 			this.gb_WatchType.TabIndex = 3;
 			this.gb_WatchType.TabStop = false;
 			this.gb_WatchType.Text = "Methode de Suivi";
 			// 
 			// rb_isFsWatch
 			// 
-			this.rb_isFsWatch.Location = new System.Drawing.Point(34, 60);
+			this.rb_isFsWatch.Location = new System.Drawing.Point(214, 30);
 			this.rb_isFsWatch.Name = "rb_isFsWatch";
 			this.rb_isFsWatch.Size = new System.Drawing.Size(261, 24);
 			this.rb_isFsWatch.TabIndex = 1;
@@ -307,9 +304,10 @@ namespace WebLogViewver
 									this.CloseToolStripMenuItem,
 									this.CloseAndDeleteFileToolStripMenuItem,
 									this.CloseAndEmptyFileToolStripMenuItem,
-									this.HtmlDisplayToolStripMenuItem});
+									this.HtmlDisplayToolStripMenuItem,
+									this.ouvrirDossierToolStripMenuItem});
 			this.contextMenuStripFileTabs.Name = "contextMenuStripFileTabs";
-			this.contextMenuStripFileTabs.Size = new System.Drawing.Size(219, 114);
+			this.contextMenuStripFileTabs.Size = new System.Drawing.Size(219, 136);
 			// 
 			// CloseToolStripMenuItem
 			// 
@@ -334,11 +332,19 @@ namespace WebLogViewver
 			// 
 			// HtmlDisplayToolStripMenuItem
 			// 
+			this.HtmlDisplayToolStripMenuItem.Enabled = false;
 			this.HtmlDisplayToolStripMenuItem.Name = "HtmlDisplayToolStripMenuItem";
 			this.HtmlDisplayToolStripMenuItem.Size = new System.Drawing.Size(218, 22);
 			this.HtmlDisplayToolStripMenuItem.Text = "HTML Mode";
 			this.HtmlDisplayToolStripMenuItem.CheckedChanged += new System.EventHandler(this.HtmlDisplayToolStripMenuItemCheckedChanged);
 			this.HtmlDisplayToolStripMenuItem.Click += new System.EventHandler(this.HtmlDisplayToolStripMenuItemClick);
+			// 
+			// ouvrirDossierToolStripMenuItem
+			// 
+			this.ouvrirDossierToolStripMenuItem.Name = "ouvrirDossierToolStripMenuItem";
+			this.ouvrirDossierToolStripMenuItem.Size = new System.Drawing.Size(218, 22);
+			this.ouvrirDossierToolStripMenuItem.Text = "Ouvrir Dossier";
+			this.ouvrirDossierToolStripMenuItem.Click += new System.EventHandler(this.OuvrirDossierToolStripMenuItemClick);
 			// 
 			// contextMenuStripConfigTab
 			// 
@@ -360,6 +366,15 @@ namespace WebLogViewver
 			this.toutFermerEtSupprimerLesFichiersToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
 			this.toutFermerEtSupprimerLesFichiersToolStripMenuItem.Text = "Tout Fermer et Supprimer les fichiers";
 			// 
+			// webBrowser1
+			// 
+			this.webBrowser1.Location = new System.Drawing.Point(893, -4);
+			this.webBrowser1.MinimumSize = new System.Drawing.Size(20, 20);
+			this.webBrowser1.Name = "webBrowser1";
+			this.webBrowser1.Size = new System.Drawing.Size(250, 250);
+			this.webBrowser1.TabIndex = 15;
+			this.webBrowser1.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.WebBrowser1PreviewKeyDown);
+			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -369,6 +384,7 @@ namespace WebLogViewver
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.Name = "MainForm";
 			this.Text = "WebLogViewver";
+			this.Load += new System.EventHandler(this.MainFormLoad);
 			this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.MainFormMouseUp);
 			this.tabControl1.ResumeLayout(false);
 			this.tabConfig.ResumeLayout(false);
@@ -382,10 +398,12 @@ namespace WebLogViewver
 			this.contextMenuStripConfigTab.ResumeLayout(false);
 			this.ResumeLayout(false);
 		}
+		private System.Windows.Forms.WebBrowser webBrowser1;
+		private System.Windows.Forms.ToolStripMenuItem ouvrirDossierToolStripMenuItem;
+		private System.Windows.Forms.CheckBox cb_ConfirmDeletes;
 		private System.Windows.Forms.ToolStripMenuItem toutFermerEtSupprimerLesFichiersToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem toutCloseToolStripMenuItem;
 		private System.Windows.Forms.ContextMenuStrip contextMenuStripConfigTab;
-		private System.Windows.Forms.Label lbl_Path;
 		private System.Windows.Forms.ToolStripMenuItem HtmlDisplayToolStripMenuItem;
 		private System.Windows.Forms.ComboBox cb_Path;
 		private System.Windows.Forms.ToolStripMenuItem CloseAndEmptyFileToolStripMenuItem;
@@ -396,7 +414,6 @@ namespace WebLogViewver
 		private System.Windows.Forms.GroupBox gp_Files;
 		private System.Windows.Forms.CheckBox cb_AutoStart;
 		private System.Windows.Forms.Button b_TimerButton;
-		private System.Windows.Forms.Label label4;
 		private System.Windows.Forms.Button b_Apply;
 		private System.Windows.Forms.TextBox tb_Filtre;
 		private System.Windows.Forms.Label label3;

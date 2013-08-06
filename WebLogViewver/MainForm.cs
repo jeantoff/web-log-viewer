@@ -27,6 +27,8 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection; 
+using System.Resources;
 
 //using System.Security;
 //using System.Security.Permissions;
@@ -43,31 +45,47 @@ namespace WebLogViewver
 	/// </summary>
 	public partial class MainForm : Form
 	{
-	
+		private string ConfigFileFullName;
 		private Dictionary<string,WatchedFileInfo> WatchedFilesList;
 		private WblvConfig CurrentConfig;
 		private bool PathHasChanged;
 		
 		private Settings1 appsettings= new Settings1();
+		//private ResourceManager Appresources=new ResourceManager(WebLogViewver.
  
 		public MainForm()
 		{
+			//this.SetStyle(ControlStyles.SupportsTransparentBackColor, true);
 			InitializeComponent();
+			/*MainForm.BackColor=Color.Transparent;*/
+	
+			
+			BackColor=Color.Lime;
+			TransparencyKey=Color.Lime;
+			
+			//Opacity=0.4;
+			tabControl1.BackColor=Color.Lime;
+			
+			tabConfig.BackColor=Color.Transparent;
 			
 			this.PathHasChanged=false;
+			
+			
+			ConfigFileFullName=Path.GetFullPath(Path.Combine(Application.StartupPath,  @"..\resources\config.csv")) ;
 			try
 			{
-				this.CurrentConfig =new WblvConfig(Application.StartupPath  + @"..\..\resources\config.csv");				
+				this.CurrentConfig =new WblvConfig(ConfigFileFullName);				
 			}
 			catch(FileNotFoundException ex)
 			{
-			
 				MessageBox.Show(ex.Message+"\nUne configuration par défaut va être générée.","Fichier introuvable",MessageBoxButtons.OK,MessageBoxIcon.Error,MessageBoxDefaultButton.Button1,MessageBoxOptions.DefaultDesktopOnly);
+				this.CurrentConfig =new WblvConfig(5, appsettings.default_directory,"*.log",false);
 				
-				this.CurrentConfig =new WblvConfig(5, appsettings.default_directory,"*.*",false);
-				
-				this.CurrentConfig.SaveToFile(appsettings.default_configFileName);
+			//ConfigFileFullName= appsettings.default_directory + @"\"+ appsettings.default_configFileName;
+				this.CurrentConfig.SaveToFile(ConfigFileFullName);
 			}
+			
+			tabConfig.ToolTipText=ConfigFileFullName;
 			
 			this.WatchedFilesList = new Dictionary<string, WatchedFileInfo>();
 			
@@ -89,9 +107,19 @@ namespace WebLogViewver
 		private void  UpdateFilesList()
 		{
 			DirectoryInfo di = new DirectoryInfo(this.CurrentConfig.WatchedDirectory);
-			FileInfo[] fileslist= di.GetFiles(this.CurrentConfig.FileFilter);
+				
+			    string[] searchPatterns = this.CurrentConfig.FileFilter.Split(',');
+			    
+			    List<FileInfo> files = new List<FileInfo>();
+			    
+			    foreach (string sp in searchPatterns)
+			    {
+			    	files.AddRange(di.GetFiles(sp));
+			    }
 
-			foreach(FileInfo finf in fileslist)
+		//	FileInfo[] fileslist= di.GetFiles(this.CurrentConfig.FileFilter);
+
+			foreach(FileInfo finf in files)
 			{
 				if( !this.WatchedFilesList.ContainsKey(finf.FullName))
 				{
@@ -161,8 +189,6 @@ namespace WebLogViewver
 			foreach(string tpname in oldtabskeys)
 				if(tpname != "tabConfig")
 					tabControl1.TabPages.RemoveByKey(tpname);
-
-			Debug.WriteLine("ici");
 		}
 		
 		/// <summary>
@@ -209,13 +235,18 @@ namespace WebLogViewver
 			{
 				tp= new TabPage(basename);
 				tp.Name=basename;	
+				tp.ToolTipText=finf.FullName;
 				
 				wb= new WebBrowser();
 				wb.Name="wb_"+basename;
 
 				tp.Controls.Add(wb);
 				wb.Dock= DockStyle.Fill;	
-
+				
+				//WebBrowser1PreviewKeyDown
+				
+				wb.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.WebBrowser1PreviewKeyDown);
+				
 				this.tabControl1.TabPages.Add(tp);
 				
 			}
@@ -357,8 +388,21 @@ namespace WebLogViewver
 		{
 		   if(index>0)
 	       {
-	           	if(MessageBox.Show("Confirmer la fermeture ?","Confirmation",MessageBoxButtons.YesNoCancel /*,MessageBoxIcon.Asterisk*/)
-	           	   == DialogResult.Yes)
+		   		DialogResult dres=DialogResult.No;
+		  
+		   		
+		   		
+		   		if(cb_ConfirmDeletes.Checked)
+			   	{
+		   			
+			   		dres=MessageBox.Show("Confirmer la fermeture ?","Confirmation",MessageBoxButtons.YesNoCancel /*,MessageBoxIcon.Asterisk*/);
+			   	}
+			   	else
+			   	{
+			   		dres=DialogResult.Yes;
+			   	}
+		   	
+	           	if(dres==DialogResult.Yes)
 	           	{
 	               tabControl1.TabPages.RemoveAt(index);	 
 	               return true;
@@ -367,8 +411,9 @@ namespace WebLogViewver
 		   		{
 		   			return false;
 		   		}
-	       }
-			return false;		               
+	      }
+				
+			return false;
 		}
 	
 		/// <summary>
@@ -398,10 +443,11 @@ namespace WebLogViewver
 		void B_ApplyClick(object sender, EventArgs e)
 		{
 			MapControlsInConfig();	
+			
+			
+			this.CurrentConfig.SaveToFile(ConfigFileFullName);
 			ApplyConfig(null);
-			
-			this.CurrentConfig.SaveToFile("config.csv");
-			
+			UpdateFilesList();
 			if(!this.CurrentConfig.UseFileSystemWatcher)
 			{
 				StartTimer();
@@ -435,7 +481,6 @@ namespace WebLogViewver
 		void FileSystemWatcher1Changed(object sender, FileSystemEventArgs e)
 		{
 			string filePath=e.FullPath;
-			Debug.WriteLine(filePath);
 			UpdateTab(filePath);
 		}
 
@@ -454,16 +499,14 @@ namespace WebLogViewver
 		void MainFormMouseUp(object sender, MouseEventArgs e)
 		{
 			int tabindex=GetTabIndexFromPos(e.Location);
-			
-			Debug.WriteLine("tab "+tabindex + " selected");
 			switch(tabindex)
 			{	
 				case -1:
 					break;
 					
 				case 0:
-					
-					OpenConfigContextMenu( e,tabindex);
+					if(e.Button == MouseButtons.Right)
+						OpenConfigContextMenu( e,tabindex);
 					
 					break;
 				
@@ -569,7 +612,6 @@ namespace WebLogViewver
 			
 			if(HtmlDisplayToolStripMenuItem.Checked)
 			{
-				Debug.WriteLine("Mode html");
 				this.WatchedFilesList[path].DisplayType=DisplayTypeEnum.Html;
 				tabControl1.Refresh();
 			}
@@ -615,5 +657,33 @@ namespace WebLogViewver
 		if(timeron)
 			StartTimer();
 		}//function
+		
+		void MainFormLoad(object sender, EventArgs e)
+		{
+			this.SetStyle(System.Windows.Forms.ControlStyles.SupportsTransparentBackColor, true);
+     		 this.BackColor = System.Drawing.Color.Transparent;
+		}
+		
+		void OuvrirDossierToolStripMenuItemClick(object sender, EventArgs e)
+		{
+			bool timeron=timer1.Enabled;
+			if(timeron)
+				StopTimer();
+			
+			int tabindex=(int) contextMenuStripFileTabs.Tag;
+			string path=this.CurrentConfig.WatchedDirectory ;
+
+			Process.Start(path);
+		}
+		
+		void WebBrowser1PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+		{
+			if(e.KeyCode == Keys.F5)
+			{
+				
+				UpdateFilesList();				
+				
+			}
+		}
 	}//class
 }//namespace

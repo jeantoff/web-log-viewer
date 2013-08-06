@@ -43,7 +43,8 @@ namespace WebLogViewver
 		
 		public WblvConfig(string fullFileName)
 		{
-			LoadFromFile(fullFileName);
+			if(! LoadFromFile(fullFileName))
+				throw new FileNotFoundException(fullFileName);
 
 		}
 		
@@ -149,6 +150,7 @@ namespace WebLogViewver
 		/// <param name="fileFullPath"></param>
 		public void SaveToFile(string fileFullPath)
 		{
+			Debug.WriteLine(fileFullPath + " filters : "+ this.FileFilter);
             // create a writer and open the file
             TextWriter tw = new StreamWriter(fileFullPath);
          
@@ -177,37 +179,44 @@ namespace WebLogViewver
 		/// loads the configuration from a csv file
 		/// </summary>
 		/// <param name="fileFullPath"></param>
-		public void LoadFromFile(string fileFullPath)
+		public bool LoadFromFile(string fileFullPath)
 		{
 			LastFileName=fileFullPath;
             TextReader tr = new StreamReader(fileFullPath);
             string configline=tr.ReadLine();
             tr.Close();
-            
-            string[]parms= configline.Split(';');
-
-            StartTimerAuto = parms[0]=="0"?false:true;
-            TimerFrequency = int.Parse(parms[1],CultureInfo.CurrentCulture );
-           
-            FileFilter= parms[3];
-            UseFileSystemWatcher=bool.Parse( parms[4]);
-            
-            _watchedDirList=new List<string>();
-            if(parms.Length==6)
-            {
-            string[] dirlist= parms[5].Split('|');
-            
-         
-            _watchedDirList.AddRange(dirlist);
-            }
-            else
-            {
-            	_watchedDirList.Add(parms[2]);	
-            }
-            
-             WatchedDirectory = parms[2];   
+            try{
+	            string[]parms= configline.Split(';');
+	
+	            StartTimerAuto = parms[0]=="0"?false:true;
+	            TimerFrequency = int.Parse(parms[1],CultureInfo.CurrentCulture );
+	           
+	            FileFilter= parms[3];
+	            UseFileSystemWatcher=bool.Parse( parms[4]);
+	            
+	            _watchedDirList=new List<string>();
+	            if(parms.Length==6)
+	            {
+	            string[] dirlist= parms[5].Split('|');
+	            
+	         
+	            _watchedDirList.AddRange(dirlist);
+	            }
+	            else
+	            {
+	            	_watchedDirList.Add(parms[2]);	
+	            }
+	            
+	             WatchedDirectory = parms[2];   
+		}
+        catch
+		{
+			return false;
 		}
 		
+		return true; 
+		}
+
 		
 	}//class
 }//namespace
