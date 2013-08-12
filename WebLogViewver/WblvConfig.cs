@@ -182,37 +182,53 @@ namespace WebLogViewver
 		public bool LoadFromFile(string fileFullPath)
 		{
 			LastFileName=fileFullPath;
-            TextReader tr = new StreamReader(fileFullPath);
-            string configline=tr.ReadLine();
+			TextReader tr ;
+			string configline;
+			try{
+				tr = new StreamReader(fileFullPath);
+			}
+			catch( System.IO.IOException ex)
+			{
+				Trace.WriteLine(ex.Message);
+				return false;
+			}
+			
+			try
+			{
+            	configline=tr.ReadLine();
+			}
+			catch( System.IO.IOException exr)
+			{
+				Trace.WriteLine(exr.Message);
+				return false;		
+			}
+			
             tr.Close();
-            try{
-	            string[]parms= configline.Split(';');
-	
-	            StartTimerAuto = parms[0]=="0"?false:true;
-	            TimerFrequency = int.Parse(parms[1],CultureInfo.CurrentCulture );
-	           
-	            FileFilter= parms[3];
-	            UseFileSystemWatcher=bool.Parse( parms[4]);
-	            
-	            _watchedDirList=new List<string>();
-	            if(parms.Length==6)
-	            {
-	            string[] dirlist= parms[5].Split('|');
-	            
-	         
-	            _watchedDirList.AddRange(dirlist);
-	            }
-	            else
-	            {
-	            	_watchedDirList.Add(parms[2]);	
-	            }
-	            
-	             WatchedDirectory = parms[2];   
-		}
-        catch
-		{
-			return false;
-		}
+            
+            
+            string[]parms= configline.Split(';');
+
+            StartTimerAuto = parms[0]=="0"?false:true;
+            TimerFrequency = int.Parse(parms[1],CultureInfo.CurrentCulture );
+           
+            FileFilter= parms[3];
+            UseFileSystemWatcher=bool.Parse( parms[4]);
+            
+            _watchedDirList=new List<string>();
+            if(parms.Length==6)
+            {
+            string[] dirlist= parms[5].Split('|');
+            
+         
+            _watchedDirList.AddRange(dirlist);
+            }
+            else
+            {
+            	_watchedDirList.Add(parms[2]);	
+            }
+            
+             WatchedDirectory = parms[2];   
+
 		
 		return true; 
 		}

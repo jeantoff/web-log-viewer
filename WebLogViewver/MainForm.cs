@@ -29,6 +29,11 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection; 
 using System.Resources;
+using  Microsoft.CSharp;
+
+using System.Security.Permissions  ;
+using System.Security;
+
 
 //using System.Security;
 //using System.Security.Permissions;
@@ -43,6 +48,7 @@ namespace WebLogViewver
 	/// <summary>
 	/// Description of MainForm.
 	/// </summary>
+[SecurityCritical]
 	public partial class MainForm : Form
 	{
 		private string ConfigFileFullName;
@@ -55,23 +61,11 @@ namespace WebLogViewver
  
 		public MainForm()
 		{
-			//this.SetStyle(ControlStyles.SupportsTransparentBackColor, true);
 			InitializeComponent();
-			/*MainForm.BackColor=Color.Transparent;*/
-	
-			
-			BackColor=Color.Lime;
-			TransparencyKey=Color.Lime;
-			
-			//Opacity=0.4;
-			tabControl1.BackColor=Color.Lime;
-			
-			tabConfig.BackColor=Color.Transparent;
-			
 			this.PathHasChanged=false;
-			
-			
+
 			ConfigFileFullName=Path.GetFullPath(Path.Combine(Application.StartupPath,  @"..\resources\config.csv")) ;
+			
 			try
 			{
 				this.CurrentConfig =new WblvConfig(ConfigFileFullName);				
@@ -81,7 +75,6 @@ namespace WebLogViewver
 				MessageBox.Show(ex.Message+"\nUne configuration par défaut va être générée.","Fichier introuvable",MessageBoxButtons.OK,MessageBoxIcon.Error,MessageBoxDefaultButton.Button1,MessageBoxOptions.DefaultDesktopOnly);
 				this.CurrentConfig =new WblvConfig(5, appsettings.default_directory,"*.log",false);
 				
-			//ConfigFileFullName= appsettings.default_directory + @"\"+ appsettings.default_configFileName;
 				this.CurrentConfig.SaveToFile(ConfigFileFullName);
 			}
 			
@@ -102,8 +95,9 @@ namespace WebLogViewver
 			
 		}//function
 		
-		
 		//PRIVATE FUNCTIONS ----------------------------------------------------------------------
+		#region "private"
+		[SecurityCritical]
 		private void  UpdateFilesList()
 		{
 			DirectoryInfo di = new DirectoryInfo(this.CurrentConfig.WatchedDirectory);
@@ -117,26 +111,23 @@ namespace WebLogViewver
 			    	files.AddRange(di.GetFiles(sp));
 			    }
 
-		//	FileInfo[] fileslist= di.GetFiles(this.CurrentConfig.FileFilter);
-
 			foreach(FileInfo finf in files)
 			{
 				if( !this.WatchedFilesList.ContainsKey(finf.FullName))
 				{
 					this.WatchedFilesList.Add(finf.FullName,new WatchedFileInfo(finf));
-					UpdateTab(finf.FullName);
+					this.UpdateTab(finf.FullName);
 				}	
 				else
 				{
 					if(this.WatchedFilesList[finf.FullName].Update())
 					{
-						UpdateTab(finf.FullName);
+						this.UpdateTab(finf.FullName);
 					}
 				}
 			}	//foreach
 		}//function
 	
-		/*[SecuritySafeCritical]*/
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2122:DoNotIndirectlyExposeMethodsWithLinkDemands")]
 		private void ApplyConfig(WblvConfig wlb)
 		{
@@ -144,9 +135,7 @@ namespace WebLogViewver
 
 			if(wlb == null)
 				wlb=this.CurrentConfig;
-			
-			//EnvironmentPermission envPermission = new EnvironmentPermission( EnvironmentPermissionAccess.Write,fileSystemWatcher1.Path);
-         	//envPermission.Assert();
+
 			fileSystemWatcher1.Path=wlb.WatchedDirectory;
 			tb_Filtre.Text=wlb.FileFilter;
 			num_Freq.Value = wlb.TimerFrequency;
@@ -202,22 +191,30 @@ namespace WebLogViewver
 			this.CurrentConfig.TimerFrequency =(int) num_Freq.Value;
 			this.CurrentConfig.UseFileSystemWatcher = rb_isFsWatch.Checked;
 		}
-
+	
+		
+		[SecurityCritical]
+		static string GetFileName(string FilePath)
+		{
+			FileInfo finf=new FileInfo(FilePath);
+			return finf.Name;
+		}
+		
+		[SecurityCritical]
+		static string GetFileFullName(string FilePath)
+		{
+			FileInfo finf=new FileInfo(FilePath);
+			return finf.FullName;
+		}
+		
 		/// <summary>
 		/// refresh tab webbrowser content with associated file content
 		/// </summary>
 		/// <param name="FilePath"></param>
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2122:DoNotIndirectlyExposeMethodsWithLinkDemands")]
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2122:DoNotIndirectlyExposeMethodsWithLinkDemands")]
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2122:DoNotIndirectlyExposeMethodsWithLinkDemands")]
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2122:DoNotIndirectlyExposeMethodsWithLinkDemands")]
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2122:DoNotIndirectlyExposeMethodsWithLinkDemands")]
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2122:DoNotIndirectlyExposeMethodsWithLinkDemands")]
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2122:DoNotIndirectlyExposeMethodsWithLinkDemands")]
-		private void UpdateTab(string FilePath)
+	[PermissionSetAttribute(SecurityAction.LinkDemand, Name="FullTrust")]
+	 void UpdateTab(string FilePath)
 		{
-			FileInfo finf=new FileInfo(FilePath);
-			string basename=finf.Name;
+			string basename=GetFileName( FilePath);
 			TabPage tp;
 			WebBrowser wb;
 			//Panel pnl;
@@ -235,20 +232,15 @@ namespace WebLogViewver
 			{
 				tp= new TabPage(basename);
 				tp.Name=basename;	
-				tp.ToolTipText=finf.FullName;
+				tp.ToolTipText=GetFileFullName(FilePath);
 				
 				wb= new WebBrowser();
 				wb.Name="wb_"+basename;
-
 				tp.Controls.Add(wb);
 				wb.Dock= DockStyle.Fill;	
-				
-				//WebBrowser1PreviewKeyDown
-				
 				wb.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.WebBrowser1PreviewKeyDown);
 				
 				this.tabControl1.TabPages.Add(tp);
-				
 			}
 			else
 			{
@@ -268,11 +260,11 @@ namespace WebLogViewver
 			}
 
 			tabControl1.SelectedTab= tp;
-			/*
-			System.Uri uri =new Uri(FilePath);
-			wb.Url=uri;
-			wb.Update();
-			*/
+			
+			//System.Uri uri =new Uri(FilePath);
+			//wb.Url=uri;
+			//wb.Update();
+			
        		Application.DoEvents();
 	        if (wb.Document!=null  && wb.Document != null)
 	        {
@@ -280,48 +272,12 @@ namespace WebLogViewver
 	        }                 
 		}//function
 		
+		#endregion
 		
-		 void OpenConfigContextMenu(MouseEventArgs e,int tabindex)
-		{
-			contextMenuStripConfigTab.Show(new Point(e.X+this.Location.X,e.Y+this.Location.Y+(this.contextMenuStripFileTabs.Height/2)));	
-		}
 
 		
-		void OpenFileTabContextMenu(MouseEventArgs e,int tabindex)
-		{
-			contextMenuStripFileTabs.Tag=tabindex;
-			string path=this.CurrentConfig.WatchedDirectory + @"\"+tabControl1.TabPages[tabindex].Name;
-			
-			if(this.WatchedFilesList[path].DisplayType==DisplayTypeEnum.Html)
-				HtmlDisplayToolStripMenuItem.Checked=true;
-			else
-				HtmlDisplayToolStripMenuItem.Checked=false;
-			
-			
-			switch(this.WatchedFilesList[path].DisplayType)
-			{	
-				case DisplayTypeEnum.Html:
-					HtmlDisplayToolStripMenuItem.Checked=true;
-					break;
-					
-				case DisplayTypeEnum.RawText:
-					HtmlDisplayToolStripMenuItem.Checked=false;
-					break;
-					
-				case DisplayTypeEnum.Undefined:
-					if(this.WatchedFilesList[path].Content.StartsWith("<",StringComparison.CurrentCulture))
-						HtmlDisplayToolStripMenuItem.Checked=true;
-					else
-						HtmlDisplayToolStripMenuItem.Checked=false;
-					   
-					break;
-			}//switch
-			
-			contextMenuStripFileTabs.Show(new Point(e.X+this.Location.X,e.Y+this.Location.Y+(this.contextMenuStripFileTabs.Height/2)));
-		}
-		
 		/// <summary>
-		/// return a tab index according with his name
+		/// return a tab index according to his name
 		/// </summary>
 		/// <param name="tabName">Name of the searched tab</param>
 		/// <returns>tab index if found, else -1</returns>
@@ -440,6 +396,8 @@ namespace WebLogViewver
 		
 		
 		//EVENTS FUNCTIONS ----------------------------------------------------------------------
+		#region "EVENTS FUNCTIONS"
+	
 		void B_ApplyClick(object sender, EventArgs e)
 		{
 			MapControlsInConfig();	
@@ -451,7 +409,6 @@ namespace WebLogViewver
 			if(!this.CurrentConfig.UseFileSystemWatcher)
 			{
 				StartTimer();
-				
 			}
 		}
 				
@@ -481,7 +438,7 @@ namespace WebLogViewver
 		void FileSystemWatcher1Changed(object sender, FileSystemEventArgs e)
 		{
 			string filePath=e.FullPath;
-			UpdateTab(filePath);
+			this.UpdateTab(filePath);
 		}
 
 		void FileSystemWatcher1Deleted(object sender, FileSystemEventArgs e)
@@ -506,7 +463,7 @@ namespace WebLogViewver
 					
 				case 0:
 					if(e.Button == MouseButtons.Right)
-						OpenConfigContextMenu( e,tabindex);
+						OpenConfigContextMenu( e);
 					
 					break;
 				
@@ -685,5 +642,46 @@ namespace WebLogViewver
 				
 			}
 		}
+		
+		void OpenConfigContextMenu(MouseEventArgs e)
+		{
+			contextMenuStripConfigTab.Show(new Point(e.X+this.Location.X,e.Y+this.Location.Y+(this.contextMenuStripFileTabs.Height/2)));	
+		}
+
+		
+		void OpenFileTabContextMenu(MouseEventArgs e,int tabindex)
+		{
+			contextMenuStripFileTabs.Tag=tabindex;
+			string path=this.CurrentConfig.WatchedDirectory + @"\"+tabControl1.TabPages[tabindex].Name;
+			
+			if(this.WatchedFilesList[path].DisplayType==DisplayTypeEnum.Html)
+				HtmlDisplayToolStripMenuItem.Checked=true;
+			else
+				HtmlDisplayToolStripMenuItem.Checked=false;
+			
+			
+			switch(this.WatchedFilesList[path].DisplayType)
+			{	
+				case DisplayTypeEnum.Html:
+					HtmlDisplayToolStripMenuItem.Checked=true;
+					break;
+					
+				case DisplayTypeEnum.RawText:
+					HtmlDisplayToolStripMenuItem.Checked=false;
+					break;
+					
+				case DisplayTypeEnum.Undefined:
+					if(this.WatchedFilesList[path].Content.StartsWith("<",StringComparison.CurrentCulture))
+						HtmlDisplayToolStripMenuItem.Checked=true;
+					else
+						HtmlDisplayToolStripMenuItem.Checked=false;
+					   
+					break;
+			}//switch
+			
+			contextMenuStripFileTabs.Show(new Point(e.X+this.Location.X,e.Y+this.Location.Y+(this.contextMenuStripFileTabs.Height/2)));
+		}
+		
+		#endregion
 	}//class
 }//namespace

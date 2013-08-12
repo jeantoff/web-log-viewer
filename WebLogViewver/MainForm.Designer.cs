@@ -69,7 +69,6 @@ namespace WebLogViewver
 			this.contextMenuStripConfigTab = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.toutCloseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toutFermerEtSupprimerLesFichiersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.webBrowser1 = new System.Windows.Forms.WebBrowser();
 			this.tabControl1.SuspendLayout();
 			this.tabConfig.SuspendLayout();
 			this.gp_Files.SuspendLayout();
@@ -91,14 +90,13 @@ namespace WebLogViewver
 			this.tabControl1.Name = "tabControl1";
 			this.tabControl1.SelectedIndex = 0;
 			this.tabControl1.ShowToolTips = true;
-			this.tabControl1.Size = new System.Drawing.Size(1256, 537);
+			this.tabControl1.Size = new System.Drawing.Size(691, 475);
 			this.tabControl1.TabIndex = 0;
 			this.tabControl1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.MainFormMouseUp);
 			// 
 			// tabConfig
 			// 
 			this.tabConfig.AutoScroll = true;
-			this.tabConfig.Controls.Add(this.webBrowser1);
 			this.tabConfig.Controls.Add(this.cb_ConfirmDeletes);
 			this.tabConfig.Controls.Add(this.gp_Files);
 			this.tabConfig.Controls.Add(this.gp_Timer);
@@ -107,7 +105,7 @@ namespace WebLogViewver
 			this.tabConfig.Location = new System.Drawing.Point(4, 25);
 			this.tabConfig.Name = "tabConfig";
 			this.tabConfig.Padding = new System.Windows.Forms.Padding(3);
-			this.tabConfig.Size = new System.Drawing.Size(1248, 508);
+			this.tabConfig.Size = new System.Drawing.Size(683, 446);
 			this.tabConfig.TabIndex = 0;
 			this.tabConfig.Text = "Config";
 			this.tabConfig.UseVisualStyleBackColor = true;
@@ -366,20 +364,11 @@ namespace WebLogViewver
 			this.toutFermerEtSupprimerLesFichiersToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
 			this.toutFermerEtSupprimerLesFichiersToolStripMenuItem.Text = "Tout Fermer et Supprimer les fichiers";
 			// 
-			// webBrowser1
-			// 
-			this.webBrowser1.Location = new System.Drawing.Point(893, -4);
-			this.webBrowser1.MinimumSize = new System.Drawing.Size(20, 20);
-			this.webBrowser1.Name = "webBrowser1";
-			this.webBrowser1.Size = new System.Drawing.Size(250, 250);
-			this.webBrowser1.TabIndex = 15;
-			this.webBrowser1.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.WebBrowser1PreviewKeyDown);
-			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(1256, 537);
+			this.ClientSize = new System.Drawing.Size(691, 475);
 			this.Controls.Add(this.tabControl1);
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.Name = "MainForm";
@@ -398,7 +387,6 @@ namespace WebLogViewver
 			this.contextMenuStripConfigTab.ResumeLayout(false);
 			this.ResumeLayout(false);
 		}
-		private System.Windows.Forms.WebBrowser webBrowser1;
 		private System.Windows.Forms.ToolStripMenuItem ouvrirDossierToolStripMenuItem;
 		private System.Windows.Forms.CheckBox cb_ConfirmDeletes;
 		private System.Windows.Forms.ToolStripMenuItem toutFermerEtSupprimerLesFichiersToolStripMenuItem;
