@@ -31,6 +31,8 @@ using System.Reflection;
 using System.Resources;
 using  Microsoft.CSharp;
 
+
+
 using System.Security.Permissions  ;
 using System.Security;
 
@@ -144,7 +146,10 @@ namespace WebLogViewver
 			
 			cb_Path.Items.AddRange(wlb.WatchedDirList());
 			cb_Path.Text=wlb.WatchedDirectory;
-	
+		
+			this.Text="WLB-"+wlb.WatchedDirectory;
+			
+			
 			if(this.CurrentConfig.StartTimerAuto)
 			{
 				cb_AutoStart.Checked=true;
@@ -334,6 +339,44 @@ namespace WebLogViewver
 		}
 		
 		
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1300:SpecifyMessageBoxOptions")]
+		private int RemoveAllTabs(bool b_removefile)
+		{
+			
+			List<TabPage> temptablist = new List<TabPage>();
+			int count= tabControl1.TabPages.Count-1;
+			if(count==-1)
+				return 0;
+			foreach(TabPage tp in tabControl1.TabPages)
+			{
+				
+				if(tp.Name != "tabConfig")
+				{
+					temptablist.Add(tp);
+				}
+			}
+			
+			foreach(TabPage tp in temptablist)
+			{
+				tabControl1.TabPages.Remove(tp);
+				if(b_removefile)
+				{
+					string path=this.CurrentConfig.WatchedDirectory + @"\"+tp.Name;
+					try{
+						File.Delete(path);
+					}
+					catch(System.IO.IOException ex)
+					{
+						MessageBox.Show(ex.Message,"Erreur",MessageBoxButtons.OK,MessageBoxIcon.Error);
+					}
+				}	
+			}
+			
+			return count;
+		}
+	
+		
+		
 		/// <summary>
 		/// remove a tab from tab control
 		/// </summary>
@@ -345,13 +388,13 @@ namespace WebLogViewver
 		   if(index>0)
 	       {
 		   		DialogResult dres=DialogResult.No;
-		  
+				
+		   		string tabname=tabControl1.TabPages[index].Name;
 		   		
 		   		
 		   		if(cb_ConfirmDeletes.Checked)
 			   	{
-		   			
-			   		dres=MessageBox.Show("Confirmer la fermeture ?","Confirmation",MessageBoxButtons.YesNoCancel /*,MessageBoxIcon.Asterisk*/);
+			   		dres=MessageBox.Show("Confirmer la fermeture de l'onglet "+ tabname + " ?","Confirmation",MessageBoxButtons.YesNoCancel /*,MessageBoxIcon.Asterisk*/);
 			   	}
 			   	else
 			   	{
@@ -483,48 +526,7 @@ namespace WebLogViewver
 		}//function
 			
 				
-		void CloseToolStripMenuItemClick(object sender, EventArgs e)
-		{
-			int tabindex=(int) contextMenuStripFileTabs.Tag;
-			
-			if(RemoveTab(tabindex))
-			{
-				if(tabControl1.TabPages.Count>1)
-				{
-					if(tabindex==tabControl1.TabPages.Count)
-						tabindex=tabControl1.TabPages.Count -1;
-					
-					tabControl1.SelectedTab=tabControl1.TabPages[tabindex];
-				}
-				
-			}
-		}
 
-		void CloseAndDeleteFileToolStripMenuItemClick(object sender, EventArgs e)
-		{
-			bool timeron=timer1.Enabled;
-			if(timeron)
-				StopTimer();
-			
-			int tabindex=(int) contextMenuStripFileTabs.Tag;
-			string path=this.CurrentConfig.WatchedDirectory + @"\"+tabControl1.TabPages[tabindex].Name;
-			
-			if(RemoveTab(tabindex))
-			{
-				File.Delete(path);
-				
-				if(tabControl1.TabPages.Count>1)
-				{
-					if(tabindex==tabControl1.TabPages.Count)
-						tabindex=tabControl1.TabPages.Count -1;
-					
-					tabControl1.SelectedTab=tabControl1.TabPages[tabindex];
-				}				
-			}	
-			
-			if(timeron)
-				StartTimer();
-		}//function
 		
 		void B_TimerButtonClick(object sender, EventArgs e)
 		{
@@ -598,22 +600,7 @@ namespace WebLogViewver
 			StopTimer();
 		}
 		
-		void CloseAndEmptyFileToolStripMenuItemClick(object sender, EventArgs e)
-		{
-			bool timeron=timer1.Enabled;
-			if(timeron)
-				StopTimer();
-			
-			int tabindex=(int) contextMenuStripFileTabs.Tag;
-			string path=this.CurrentConfig.WatchedDirectory + @"\"+tabControl1.TabPages[tabindex].Name;
-			File.Delete(path);
-			
-			System.IO.FileStream fs= File.Create(path);
-			fs.Close();
-	
-		if(timeron)
-			StartTimer();
-		}//function
+
 		
 		void MainFormLoad(object sender, EventArgs e)
 		{
@@ -683,5 +670,76 @@ namespace WebLogViewver
 		}
 		
 		#endregion
+		#region "toostripsevents"
+		void CloseAndEmptyFileToolStripMenuItemClick(object sender, EventArgs e)
+		{
+			bool timeron=timer1.Enabled;
+			if(timeron)
+				StopTimer();
+			
+			int tabindex=(int) contextMenuStripFileTabs.Tag;
+			string path=this.CurrentConfig.WatchedDirectory + @"\"+tabControl1.TabPages[tabindex].Name;
+			File.Delete(path);
+			
+			System.IO.FileStream fs= File.Create(path);
+			fs.Close();
+	
+		if(timeron)
+			StartTimer();
+		}//function
+					void CloseToolStripMenuItemClick(object sender, EventArgs e)
+		{
+			int tabindex=(int) contextMenuStripFileTabs.Tag;
+			
+			if(RemoveTab(tabindex))
+			{
+				if(tabControl1.TabPages.Count>1)
+				{
+					if(tabindex==tabControl1.TabPages.Count)
+						tabindex=tabControl1.TabPages.Count -1;
+					
+					tabControl1.SelectedTab=tabControl1.TabPages[tabindex];
+				}
+				
+			}
+		}
+
+		void CloseAndDeleteFileToolStripMenuItemClick(object sender, EventArgs e)
+		{
+			bool timeron=timer1.Enabled;
+			if(timeron)
+				StopTimer();
+			
+			int tabindex=(int) contextMenuStripFileTabs.Tag;
+			string path=this.CurrentConfig.WatchedDirectory + @"\"+tabControl1.TabPages[tabindex].Name;
+			
+			if(RemoveTab(tabindex))
+			{
+				File.Delete(path);
+				
+				if(tabControl1.TabPages.Count>1)
+				{
+					if(tabindex==tabControl1.TabPages.Count)
+						tabindex=tabControl1.TabPages.Count -1;
+					
+					tabControl1.SelectedTab=tabControl1.TabPages[tabindex];
+				}				
+			}	
+			
+			if(timeron)
+				StartTimer();
+		}//function
+		
+		void ToutCloseToolStripMenuItemClick(object sender, EventArgs e)
+		{
+			RemoveAllTabs(false);
+			
+		}
+		#endregion
+		
+		void ToutFermerEtSupprimerLesFichiersToolStripMenuItemClick(object sender, EventArgs e)
+		{
+			RemoveAllTabs(true);
+		}
 	}//class
 }//namespace

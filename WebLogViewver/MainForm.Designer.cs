@@ -357,17 +357,20 @@ namespace WebLogViewver
 			this.toutCloseToolStripMenuItem.Name = "toutCloseToolStripMenuItem";
 			this.toutCloseToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
 			this.toutCloseToolStripMenuItem.Text = "Tout Fermer";
+			this.toutCloseToolStripMenuItem.Click += new System.EventHandler(this.ToutCloseToolStripMenuItemClick);
 			// 
 			// toutFermerEtSupprimerLesFichiersToolStripMenuItem
 			// 
 			this.toutFermerEtSupprimerLesFichiersToolStripMenuItem.Name = "toutFermerEtSupprimerLesFichiersToolStripMenuItem";
 			this.toutFermerEtSupprimerLesFichiersToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
 			this.toutFermerEtSupprimerLesFichiersToolStripMenuItem.Text = "Tout Fermer et Supprimer les fichiers";
+			this.toutFermerEtSupprimerLesFichiersToolStripMenuItem.Click += new System.EventHandler(this.ToutFermerEtSupprimerLesFichiersToolStripMenuItemClick);
 			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.AutoSize = true;
 			this.ClientSize = new System.Drawing.Size(691, 475);
 			this.Controls.Add(this.tabControl1);
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));

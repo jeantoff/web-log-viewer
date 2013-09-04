@@ -48,6 +48,7 @@
     <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="mcepg" />
     <Reference Include="System" />
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -62,6 +63,9 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="webbrwsr">
+      <HintPath>..\..\..\..\..\..\Program Files %28x86%29\Mozilla ActiveX Control v1.7.12\components\webbrwsr.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -90,6 +94,16 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings_cbv.Designer.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="MOZILLACONTROLLib">
+      <Guid>{1339B53E-3453-11D2-93B9-000000000000}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+    </COMReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.Targets" />
 </Project>

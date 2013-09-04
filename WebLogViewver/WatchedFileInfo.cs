@@ -132,17 +132,24 @@ namespace WebLogViewver
 		
 		private void ComputeMd5(bool init)
 		{
-			byte[] newmd5 ;
+			byte[] newmd5=null ;
 			using ( MD5 o_md5 = MD5.Create())
-			{
-				using (var stream = File.OpenRead(Informations.FullName))
-				{
-					newmd5= o_md5.ComputeHash(stream);		 
+			{	
+				try{
+					using (var stream = File.OpenRead(Informations.FullName))
+					{
+						newmd5= o_md5.ComputeHash(stream);		 
+					}
 				}
-			}	
+				catch(System.IO.IOException ex)
+				{
+					//newmd5= o_md5.Clear();
+					
+				}	
+			}
 			md5Changed=false;
 			
-			if(! init)
+			if(! init && newmd5 !=null)
 			{
 				
 				for(int i=0;i<newmd5.Length;i++)
@@ -206,7 +213,8 @@ namespace WebLogViewver
 		static string GetFileContent(string fileFullName)
 		{
 			StringBuilder sb = new StringBuilder();
-			
+			string alllines="";
+			try{
 			using (StreamReader sr = new StreamReader(fileFullName,true)) 
 			{
 	   			 String line;
@@ -218,7 +226,15 @@ namespace WebLogViewver
 			    }
 			}
 		
-			string alllines=sb.ToString();
+			 alllines=sb.ToString();
+			}
+			catch(System.IO.IOException ex)
+			{
+				//MessageBox.Show(ex.Message,"Erreur",MessageBoxButtons.OK,MessageBoxIcon.Error);
+				
+				alllines="Impossible de lire le fichier !!!";
+				
+			}
 			return alllines;
 		}
 
